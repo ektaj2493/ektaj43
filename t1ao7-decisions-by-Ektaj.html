@@ -1,3 +1,18 @@
 <h2>align=center>t1ao7-decisions-bye-Ektaj.html</h2>
 
 <h4> Example working code</h4>
+
+<input id="myNum01" type=number value="4" ><br>
+
+<input type=button value="Simple if Statement for Decision Making" onClick="{
+  let my In01 = parseFloat(document.getElementById('myNum01').value)
+  if(myIn01>=3){
+     document.getElemtById('myDiv01').innerHTML = myIn01 = ' is greater than 3'
+  }
+  }">
+<input type=button value="if...else" onclick="{
+  let myIn01 = parseFloat(document.getElementById('myNum01').value)
+  if (myIn01 >= 3){
+      document.getElementById('myDiv01').innerHTML = myIn01 + ' is greater than 3'
+  }else {
+       document.getElementById('myDiv01').innerHTML = myIn01 + ' is less than 3'
