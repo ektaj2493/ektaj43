@@ -1,1 +1,25 @@
+<h1 align=center>t1a02-threejs-Ektaj.html</h1>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></scipt>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
+<input type=button value="Show Plotly" onclick="{
+  this.remove();
+  let myPlotDiv = document.createElement('div');
+  myPlotlydiv.style.width = '300px';
+  myPlotlydiv.style.height = '200px';
+  document.body.appendChild(myPlotlyDiv);
+  let mySocketX = [0, 1, 2,]
+  let mySocketY = [0, 2, 1,]
+  plotly.newplot(myPlotlyDiv, [{x: mySocketX, Y: mySocketY mode: 'lines+markers'}]
+  {margin: {t:10, b:20, 1:20 r:10} paper_bgcolor: 'trnsparent',
+  }" >
+
+  <input type=button value="Show ThreeJS" onclick="{
+    this.remove();
+    let myScene = new THREE.Scene();
+    let myCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    let my Renderer = new THREE.WebGLRenderer();
+    myRenderer.setSize(200, 200);
+    document.body.appendChild(my
+    
