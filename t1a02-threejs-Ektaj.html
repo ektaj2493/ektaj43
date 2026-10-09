@@ -24,5 +24,19 @@
     document.body.appendChild(myRenderer.domElement);
 
     let myPixel = new THREE.Points(
-      new THREE.Bu
-    
+      new THREE.BufferGeometry().setAttribute('position', new
+ THREE.Float32BufferAttribute([0, 0, 0], 3)),
+      new THREE.PointsMaterial({color: 0x00ff00, size: 8, sizeAttenuation: false})
+      );
+    myScene.add(myPixel);
+    myCamera.position.z =5;
+
+    async function myRunAnimation() {
+      myPixel.position.x = (Math.random() - 0.5) * 3;
+      myPixel.position.y = (Math.random() - 0.5) * 3;
+    myRenderer.render(myScene, myCamera);
+    await new Promise(myResolve => setTimeout(myResolve, 100));
+    requestAnimationFrame(myRunAnimation);
+    }
+    myRunAnimation();
+  }">
