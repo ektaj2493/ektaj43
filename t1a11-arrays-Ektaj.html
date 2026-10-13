@@ -1,27 +1,209 @@
-<h2 align=center>t1a11-arrays-Ektaj.html</h2>
-<a href="">Good reference to Javascript Arrays </a><br>
+<h2 align="center">t1a11-arrays-Ektaj.html</h2>
 
-<h4>Example working Array code</h4>
+<a href="https://www.w3schools.com/js/js_arrays.asp">
+   Good reference to Javascript Arrays
+</a>
 
-Max Array entry: <input type=number
- id="myText01" value="3"><br>
+<hr>
 
- <input type=button value="Example onClick" onClick="{
-   let myTemp = document.getElementById('myText01').value
-   let mySum = ' '
-   document.getElementById('myDiv01').innerHTML= ' '
+<h3>Example 1: Display Array Entries</h3>
 
-   myArray = new Array()
-   myArray[0] = 'Fred'
-   myArray[1] = 'Mary'
-   myArray[2] = 'Lizzy' 
+Max Array entry:
+<input type="number" id="myText01" value="3" min="1" max="5">
 
-   for (let myLoop=0;  myLoop < myTemp;  myLoop++){
-      mySum += 'Loop #: ' + myLoop + ' array entry: ' + myArray[myLoop] +'<br>'
+<input type="button" value="Show Names" onclick="{
+   let myTemp = Number(document.getElementById('myText01').value);
+   let mySum = '';
+
+   let myArray = ['Fred', 'Mary', 'Lizzy', 'John', 'Bob'];
+
+   for (let myLoop = 0; myLoop < myTemp; myLoop++) {
+      mySum += 'Loop #: ' + myLoop +
+      ' Array entry: ' + myArray[myLoop] + '<br>';
    }
-   document.getElementById('myDiv02').innerHTML = mySum
-   }">
-   <div id="myDiv01">...</div>
 
-   <br>
-   You do more arrays that do different things, hopefully some with numbers.<br>
+   document.getElementById('myDiv01').innerHTML = mySum;
+}">
+
+<div id="myDiv01">...</div>
+
+<hr>
+
+<h3>Example 2: Add All Numbers in an Array</h3>
+
+<input type="button" value="Add Numbers" onclick="{
+   let myNumbers = [10, 20, 30, 40, 50];
+   let myTotal = 0;
+   let myOutput = 'Numbers: ' + myNumbers.join(', ') + '<br>';
+
+   for (let i = 0; i < myNumbers.length; i++) {
+      myTotal += myNumbers[i];
+   }
+
+   myOutput += 'Total = ' + myTotal;
+   document.getElementById('myDiv02').innerHTML = myOutput;
+}">
+
+<div id="myDiv02">...</div>
+
+<hr>
+
+<h3>Example 3: Find the Biggest Number</h3>
+
+<input type="button" value="Find Biggest" onclick="{
+   let myNumbers = [14, 82, 36, 95, 27, 61];
+   let myBiggest = myNumbers[0];
+
+   for (let i = 1; i < myNumbers.length; i++) {
+      if (myNumbers[i] > myBiggest) {
+         myBiggest = myNumbers[i];
+      }
+   }
+
+   document.getElementById('myDiv03').innerHTML =
+      'Array: ' + myNumbers.join(', ') +
+      '<br>Biggest number = ' + myBiggest;
+}">
+
+<div id="myDiv03">...</div>
+
+<hr>
+
+<h3>Example 4: Calculate the Average</h3>
+
+<input type="button" value="Calculate Average" onclick="{
+   let myNumbers = [70, 85, 90, 65, 100];
+   let myTotal = 0;
+
+   for (let i = 0; i < myNumbers.length; i++) {
+      myTotal += myNumbers[i];
+   }
+
+   let myAverage = myTotal / myNumbers.length;
+
+   document.getElementById('myDiv04').innerHTML =
+      'Test scores: ' + myNumbers.join(', ') +
+      '<br>Total = ' + myTotal +
+      '<br>Average = ' + myAverage;
+}">
+
+<div id="myDiv04">...</div>
+
+<hr>
+
+<h3>Example 5: Reverse an Array</h3>
+
+<input type="button" value="Reverse Array" onclick="{
+   let myColors = ['Red', 'Blue', 'Green', 'Yellow', 'Purple'];
+
+   document.getElementById('myDiv05').innerHTML =
+      'Original array: ' + myColors.join(', ') +
+      '<br>Reversed array: ' + myColors.slice().reverse().join(', ');
+}">
+
+<div id="myDiv05">...</div>
+
+<hr>
+
+<h3>Example 6: Search for a Number</h3>
+
+Enter a number:
+<input type="number" id="mySearch01" value="30">
+
+<input type="button" value="Search Array" onclick="{
+   let myNumbers = [10, 20, 30, 40, 50];
+   let mySearch = Number(document.getElementById('mySearch01').value);
+   let myFound = myNumbers.includes(mySearch);
+
+   if (myFound) {
+      document.getElementById('myDiv06').innerHTML =
+         mySearch + ' was found in the array!';
+   } else {
+      document.getElementById('myDiv06').innerHTML =
+         mySearch + ' was NOT found in the array.';
+   }
+}">
+
+<div id="myDiv06">...</div>
+
+<hr>
+
+<h3>Example 7: Multiply Every Number by 2</h3>
+
+<input type="button" value="Multiply by 2" onclick="{
+   let myNumbers = [2, 4, 6, 8, 10];
+   let myNewArray = [];
+
+   for (let i = 0; i < myNumbers.length; i++) {
+      myNewArray.push(myNumbers[i] * 2);
+   }
+
+   document.getElementById('myDiv07').innerHTML =
+      'Original: ' + myNumbers.join(', ') +
+      '<br>Multiplied: ' + myNewArray.join(', ');
+}">
+
+<div id="myDiv07">...</div>
+
+<hr>
+
+<h3>Example 8: Sort Numbers from Smallest to Largest</h3>
+
+<input type="button" value="Sort Numbers" onclick="{
+   let myNumbers = [45, 12, 89, 3, 27, 61];
+   let mySorted = myNumbers.slice().sort(function(a, b) {
+      return a - b;
+   });
+
+   document.getElementById('myDiv08').innerHTML =
+      'Original: ' + myNumbers.join(', ') +
+      '<br>Sorted: ' + mySorted.join(', ');
+}">
+
+<div id="myDiv08">...</div>
+
+<hr>
+
+<h3>Example 9: Count Even and Odd Numbers</h3>
+
+<input type="button" value="Count Even and Odd" onclick="{
+   let myNumbers = [3, 8, 12, 15, 21, 24, 30, 7];
+   let myEven = 0;
+   let myOdd = 0;
+
+   for (let i = 0; i < myNumbers.length; i++) {
+      if (myNumbers[i] % 2 === 0) {
+         myEven++;
+      } else {
+         myOdd++;
+      }
+   }
+
+   document.getElementById('myDiv09').innerHTML =
+      'Numbers: ' + myNumbers.join(', ') +
+      '<br>Even numbers: ' + myEven +
+      '<br>Odd numbers: ' + myOdd;
+}">
+
+<div id="myDiv09">...</div>
+
+<hr>
+
+<h3>Example 10: Find the Smallest Number</h3>
+
+<input type="button" value="Find Smallest" onclick="{
+   let myNumbers = [44, 7, 29, 91, 13, 2, 56];
+   let mySmallest = myNumbers[0];
+
+   for (let i = 1; i < myNumbers.length; i++) {
+      if (myNumbers[i] < mySmallest) {
+         mySmallest = myNumbers[i];
+      }
+   }
+
+   document.getElementById('myDiv10').innerHTML =
+      'Array: ' + myNumbers.join(', ') +
+      '<br>Smallest number = ' + mySmallest;
+}">
+
+<div id="myDiv10">...</div>
