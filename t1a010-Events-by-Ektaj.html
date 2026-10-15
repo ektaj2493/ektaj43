@@ -1,22 +1,357 @@
-<h2> align=center>t1ao10-Events-by-Ektaj.html</h2>
-<a href=""https://way2tutorial.com/html/html15_events_handler_list.php">
-  Good reference to HTM1 Events</a> <br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Events by Ektaj</title>
 
-  Events are HTML code that activates Javascript code
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #f5d0fe);
+            margin: 0;
+            padding: 25px;
+            color: #1e293b;
+        }
 
-  <input type=texxt id="myText01" value="3"><br>
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #64748b55;
+        }
 
-  <input type=button value="Example onClick"="{
-        document.getElementById('myDiv01').innerHTML =
-  document.getElementById('myText01').value
-  }">
-  <div id="myDiv01'>...</div>
-    <b id="myB02" onMouseOut="{
-       document.getElementById('myB02').innerHTML = 'This is nice.'
-    }"   onMouseOver = "{
-       document.getElementById('myB02').innerHTML = 'This is cool.
-    }"> This is bold</b> <br><br>
+        h1 {
+            text-align: center;
+            color: #6d28d9;
+        }
 
-    you do atleast 8 other events:<br>
-    onClick, onDBClick, onChange onBlur, onFocus, orMouseMove, onTouch, onKeyDown,
-    onKeyPress, onDragStart, onTouchStart, onTouchEnd, onTouchMove
+        h2 {
+            color: #4338ca;
+            border-bottom: 2px solid #ddd6fe;
+            padding-bottom: 8px;
+        }
+
+        .example {
+            background: #f8fafc;
+            padding: 16px;
+            margin: 15px 0;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+        }
+
+        button, input, select {
+            padding: 10px;
+            margin: 5px 3px;
+            border: 1px solid #94a3b8;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            background: #6d28d9;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background: #4c1d95;
+        }
+
+        #eventBox {
+            background: #fef3c7;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+            touch-action: pan-y;
+        }
+
+        #myDiv01 {
+            color: #047857;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #eventLog {
+            background: #0f172a;
+            color: #a7f3d0;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 60px;
+            overflow-wrap: anywhere;
+        }
+
+        .small {
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>🎯 HTML Events by Ektaj</h1>
+    <p style="text-align:center">
+        Learn JavaScript events through interactive examples!
+    </p>
+
+    <p>
+        Reference:
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Events"
+           target="_blank" rel="noopener noreferrer">
+            HTML and JavaScript Events
+        </a>
+    </p>
+
+    <h2>1. onClick Event</h2>
+    <div class="example">
+        <input type="text" id="myText01" value="3">
+        <button onclick="showText()">Show Text</button>
+        <div id="myDiv01">Your text will appear here.</div>
+    </div>
+
+    <h2>2. onMouseOver and onMouseOut</h2>
+    <div class="example">
+        <b id="myB02"
+           onmouseover="this.innerHTML='This is cool! 😎'"
+           onmouseout="this.innerHTML='Move your mouse over me!'">
+           Move your mouse over me!
+        </b>
+    </div>
+
+    <h2>3. onDblClick Event</h2>
+    <div class="example">
+        <button ondblclick="doubleClickDemo()">
+            Double-click me!
+        </button>
+        <p id="doubleResult">Waiting for a double-click...</p>
+    </div>
+
+    <h2>4. onChange Event</h2>
+    <div class="example">
+        <label for="colorChoice">Choose a color:</label>
+        <select id="colorChoice" onchange="changeColor()">
+            <option value="lightblue">Light Blue</option>
+            <option value="lightgreen">Light Green</option>
+            <option value="pink">Pink</option>
+            <option value="orange">Orange</option>
+        </select>
+        <p id="colorResult">Select a color to change this box.</p>
+    </div>
+
+    <h2>5. onFocus and onBlur Events</h2>
+    <div class="example">
+        <input type="text"
+               placeholder="Click here to focus"
+               onfocus="focusDemo(this)"
+               onblur="blurDemo(this)">
+        <p id="focusResult">Click the input box.</p>
+    </div>
+
+    <h2>6. onMouseMove Event</h2>
+    <div class="example">
+        <div id="eventBox"
+             onmousemove="moveDemo(event)"
+             onmouseleave="leaveDemo()">
+            Move your mouse inside this box!
+        </div>
+        <p id="mouseResult">Mouse position: waiting...</p>
+    </div>
+
+    <h2>7. onKeyDown Event</h2>
+    <div class="example">
+        <input type="text"
+               placeholder="Press any key"
+               onkeydown="keyDemo(event)">
+        <p id="keyResult">Press a key on your keyboard.</p>
+    </div>
+
+    <h2>8. onKeyUp Event</h2>
+    <div class="example">
+        <input type="text"
+               placeholder="Type something"
+               onkeyup="keyUpDemo(event)">
+        <p id="keyUpResult">The released key will appear here.</p>
+    </div>
+
+    <h2>9. onInput Event</h2>
+    <div class="example">
+        <input type="text"
+               placeholder="Type to see live updates"
+               oninput="inputDemo(this)">
+        <p id="inputResult">Start typing!</p>
+    </div>
+
+    <h2>10. onDragStart and onDrop Events</h2>
+    <div class="example">
+        <p id="dragItem" draggable="true"
+           ondragstart="dragDemo(event)"
+           style="background:#ddd6fe; padding:15px; width:150px; cursor:grab;">
+            🟣 Drag this item
+        </p>
+
+        <div id="dropZone"
+             ondragover="event.preventDefault()"
+             ondrop="dropDemo(event)"
+             style="background:#dcfce7; padding:25px; border:2px dashed #16a34a;">
+            Drop the item here!
+        </div>
+    </div>
+
+    <h2>11. onTouchStart, onTouchMove and onTouchEnd</h2>
+    <div class="example">
+        <div id="touchBox"
+             style="background:#fce7f3; padding:30px; text-align:center; border-radius:10px;"
+             ontouchstart="touchDemo('Touch started!')"
+             ontouchmove="touchDemo('Finger moving!')"
+             ontouchend="touchDemo('Touch ended!')">
+            Touch or swipe here on a touchscreen 📱
+        </div>
+        <p id="touchResult">Waiting for a touch...</p>
+        <p class="small">Touch events work on compatible touchscreen devices.</p>
+    </div>
+
+    <h2>12. onContextMenu Event</h2>
+    <div class="example">
+        <p oncontextmenu="contextDemo(event)"
+           style="background:#e0e7ff; padding:20px; cursor:pointer;">
+            Right-click this text!
+        </p>
+        <p id="contextResult">Try a right-click.</p>
+    </div>
+
+    <h2>13. onWheel Event</h2>
+    <div class="example">
+        <div onwheel="wheelDemo(event)"
+             style="background:#ffedd5; padding:25px; text-align:center;">
+            Scroll your mouse wheel over this box!
+        </div>
+        <p id="wheelResult">Scroll count: 0</p>
+    </div>
+
+    <h2>📋 Event Activity Log</h2>
+    <div class="example">
+        <div id="eventLog" aria-live="polite">
+            Try the examples above to see events here.
+        </div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+</div>
+
+<script>
+    function logEvent(message) {
+        const log = document.getElementById("eventLog");
+        log.innerHTML = message + "<br>" + log.innerHTML;
+    }
+
+    function showText() {
+        const value = document.getElementById("myText01").value;
+        document.getElementById("myDiv01").textContent =
+            "You entered: " + value;
+        logEvent("Click event: Show Text button clicked.");
+    }
+
+    function doubleClickDemo() {
+        document.getElementById("doubleResult").textContent =
+            "Great! You double-clicked the button!";
+        logEvent("Double-click event triggered.");
+    }
+
+    function changeColor() {
+        const color = document.getElementById("colorChoice").value;
+        const result = document.getElementById("colorResult");
+        result.style.backgroundColor = color;
+        result.style.padding = "12px";
+        result.textContent = "You selected " + color + "!";
+        logEvent("Change event: color changed to " + color + ".");
+    }
+
+    function focusDemo(element) {
+        element.style.backgroundColor = "#fef08a";
+        document.getElementById("focusResult").textContent =
+            "The input has focus!";
+        logEvent("Focus event triggered.");
+    }
+
+    function blurDemo(element) {
+        element.style.backgroundColor = "white";
+        document.getElementById("focusResult").textContent =
+            "The input lost focus.";
+        logEvent("Blur event triggered.");
+    }
+
+    function moveDemo(event) {
+        document.getElementById("mouseResult").textContent =
+            "Mouse position: X = " + event.offsetX +
+            ", Y = " + event.offsetY;
+    }
+
+    function leaveDemo() {
+        logEvent("Mouse left the event box.");
+    }
+
+    function keyDemo(event) {
+        document.getElementById("keyResult").textContent =
+            "Key pressed: " + event.key;
+        logEvent("KeyDown event: " + event.key);
+    }
+
+    function keyUpDemo(event) {
+        document.getElementById("keyUpResult").textContent =
+            "Key released: " + event.key;
+        logEvent("KeyUp event: " + event.key);
+    }
+
+    function inputDemo(element) {
+        document.getElementById("inputResult").textContent =
+            "You typed: " + element.value;
+    }
+
+    function dragDemo(event) {
+        event.dataTransfer.setData("text/plain", event.target.id);
+        logEvent("DragStart event: item picked up.");
+    }
+
+    function dropDemo(event) {
+        event.preventDefault();
+        const id = event.dataTransfer.getData("text/plain");
+        const item = document.getElementById(id);
+        if (item) {
+            event.currentTarget.appendChild(item);
+            logEvent("Drop event: item dropped successfully.");
+        }
+    }
+
+    function touchDemo(message) {
+        document.getElementById("touchResult").textContent = message;
+        logEvent(message);
+    }
+
+    function contextDemo(event) {
+        event.preventDefault();
+        document.getElementById("contextResult").textContent =
+            "You right-clicked the text!";
+        logEvent("ContextMenu event triggered.");
+    }
+
+    let wheelCount = 0;
+
+    function wheelDemo(event) {
+        wheelCount++;
+        document.getElementById("wheelResult").textContent =
+            "Scroll count: " + wheelCount;
+    }
+
+    function clearLog() {
+        document.getElementById("eventLog").textContent =
+            "Log cleared. Try another event!";
+    }
+</script>
+
+</body>
+</html>
