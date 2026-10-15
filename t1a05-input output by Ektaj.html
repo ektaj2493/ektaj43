@@ -1,349 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Output by Ektaj</title>
+<h2 align="center">t1a05-input-output-by-Ektaj.html</h2>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #dbeafe, #ede9fe);
-            margin: 0;
-            padding: 25px;
-            color: #1e293b;
-        }
+<a href="https://www.w3schools.com/jsref/prop_html_innerhtml.asp">
+    JavaScript innerHTML Reference
+</a>
 
-        .container {
-            max-width: 850px;
-            margin: auto;
-            background: white;
-            padding: 28px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px #64748b44;
-        }
+<h4>Example Input Output Code</h4>
 
-        h1 {
-            color: #6d28d9;
-            text-align: center;
-        }
-
-        h2 {
-            color: #4338ca;
-            border-bottom: 2px solid #ddd6fe;
-            padding-bottom: 8px;
-        }
-
-        .example {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            padding: 16px;
-            margin: 15px 0;
-            border-radius: 12px;
-        }
-
-        input, button {
-            padding: 10px;
-            margin: 5px 3px;
-            border-radius: 7px;
-            font-size: 15px;
-        }
-
-        input {
-            border: 1px solid #94a3b8;
-            max-width: 90%;
-        }
-
-        button {
-            background: #6d28d9;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #4c1d95;
-        }
-
-        .result {
-            background: #ede9fe;
-            padding: 12px;
-            margin-top: 12px;
-            border-radius: 8px;
-            overflow-wrap: anywhere;
-        }
-
-        .small {
-            color: #64748b;
-            font-size: 14px;
-        }
-    </style>
-</head>
-
-<body>
-<div class="container">
-
-    <h1>💻 Input and Output by Ektaj</h1>
-
-    <p>
-        JavaScript can receive input from users, process the information,
-        and display output on a webpage.
-    </p>
-
-    <p>
-        Reference:
-        <a href="https://www.w3schools.com/jsref/prop_html_innerhtml.asp"
-           target="_blank" rel="noopener noreferrer">
-            JavaScript innerHTML Reference
-        </a>
-    </p>
-
-    <h2>Example JavaScript Code</h2>
-
-    <div class="example">
-        <pre><code>
+<pre>
 let myIn01 = document.getElementById('myNum01').value;
-document.getElementById('myDiv01').textContent = 'Hi';
-        </code></pre>
-        <p class="small">
-            The first line reads input. The second line displays output.
-        </p>
-    </div>
+document.getElementById('myDiv01').innerHTML = 'Hi';
+</pre>
 
-    <h2>Enter Your Numbers</h2>
+<h4>Enter Your Numbers</h4>
 
-    <div class="example">
-        <label for="myNum01">First number:</label>
-        <input id="myNum01" type="number" value="4" step="any">
+<input id="myNum01" type="number" value="4">
+<input id="myNum02" type="number" value="2">
 
-        <br>
+<br><br>
 
-        <label for="myNum02">Second number:</label>
-        <input id="myNum02" type="number" value="2" step="any">
-    </div>
+<input type="button" value="Square" onclick="
+    let n = Number(document.getElementById('myNum01').value);
+    document.getElementById('myDiv01').innerHTML =
+    n + ' squared = ' + (n * n);
+">
 
-    <h2>1. Square a Number</h2>
-    <div class="example">
-        <button onclick="squareNumber()">Calculate Square</button>
-        <div class="result" id="result01">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Add" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    a + ' + ' + b + ' = ' + (a + b);
+">
 
-    <h2>2. Add Two Numbers</h2>
-    <div class="example">
-        <button onclick="addNumbers()">Add Numbers</button>
-        <div class="result" id="result02">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Subtract" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    a + ' - ' + b + ' = ' + (a - b);
+">
 
-    <h2>3. Subtract Two Numbers</h2>
-    <div class="example">
-        <button onclick="subtractNumbers()">Subtract Numbers</button>
-        <div class="result" id="result03">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Multiply" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    a + ' x ' + b + ' = ' + (a * b);
+">
 
-    <h2>4. Multiply Two Numbers</h2>
-    <div class="example">
-        <button onclick="multiplyNumbers()">Multiply Numbers</button>
-        <div class="result" id="result04">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Divide" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    b === 0 ? 'Cannot divide by zero' : a + ' / ' + b + ' = ' + (a / b);
+">
 
-    <h2>5. Divide Two Numbers</h2>
-    <div class="example">
-        <button onclick="divideNumbers()">Divide Numbers</button>
-        <div class="result" id="result05">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Cube" onclick="
+    let n = Number(document.getElementById('myNum01').value);
+    document.getElementById('myDiv01').innerHTML =
+    n + ' cubed = ' + (n * n * n);
+">
 
-    <h2>6. Find the Remainder</h2>
-    <div class="example">
-        <button onclick="remainderNumbers()">Calculate Remainder</button>
-        <div class="result" id="result06">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Average" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    'Average = ' + ((a + b) / 2);
+">
 
-    <h2>7. Cube a Number</h2>
-    <div class="example">
-        <button onclick="cubeNumber()">Calculate Cube</button>
-        <div class="result" id="result07">Your answer will appear here.</div>
-    </div>
+<input type="button" value="Bigger Number" onclick="
+    let a = Number(document.getElementById('myNum01').value);
+    let b = Number(document.getElementById('myNum02').value);
+    document.getElementById('myDiv01').innerHTML =
+    a > b ? a + ' is bigger' : b > a ? b + ' is bigger' : 'Numbers are equal';
+">
 
-    <h2>8. Calculate the Average</h2>
-    <div class="example">
-        <button onclick="averageNumbers()">Calculate Average</button>
-        <div class="result" id="result08">Your answer will appear here.</div>
-    </div>
+<br><br>
 
-    <h2>9. Find the Larger Number</h2>
-    <div class="example">
-        <button onclick="largerNumber()">Find Larger Number</button>
-        <div class="result" id="result09">Your answer will appear here.</div>
-    </div>
-
-    <h2>10. Create a Greeting</h2>
-    <div class="example">
-        <label for="myName">Enter your name:</label>
-        <input type="text" id="myName" placeholder="Your name">
-        <button onclick="greetUser()">Say Hello</button>
-        <div class="result" id="result10">Your greeting will appear here.</div>
-    </div>
-
-    <h2>Clear Results</h2>
-    <div class="example">
-        <button onclick="clearResults()">Clear All Results</button>
-    </div>
-
+<div id="myDiv01" style="background-color: lightblue; padding: 15px;">
+    Your answer will appear here.
 </div>
-
-<script>
-    function getNumber(id) {
-        const input = document.getElementById(id);
-
-        if (input.value.trim() === "") {
-            return null;
-        }
-
-        const number = input.valueAsNumber;
-
-        return Number.isFinite(number) ? number : null;
-    }
-
-    function getFirst() {
-        return getNumber("myNum01");
-    }
-
-    function getSecond() {
-        return getNumber("myNum02");
-    }
-
-    function showResult(id, message) {
-        document.getElementById(id).textContent = message;
-    }
-
-    function squareNumber() {
-        const a = getFirst();
-
-        if (a === null) {
-            showResult("result01", "Please enter a valid first number.");
-            return;
-        }
-
-        showResult("result01", a + " squared = " + (a * a));
-    }
-
-    function addNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result02", "Please enter both numbers.");
-            return;
-        }
-
-        showResult("result02", a + " + " + b + " = " + (a + b));
-    }
-
-    function subtractNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result03", "Please enter both numbers.");
-            return;
-        }
-
-        showResult("result03", a + " - " + b + " = " + (a - b));
-    }
-
-    function multiplyNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result04", "Please enter both numbers.");
-            return;
-        }
-
-        showResult("result04", a + " × " + b + " = " + (a * b));
-    }
-
-    function divideNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result05", "Please enter both numbers.");
-        } else if (b === 0) {
-            showResult("result05", "Cannot divide by zero!");
-        } else {
-            showResult("result05", a + " ÷ " + b + " = " + (a / b));
-        }
-    }
-
-    function remainderNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result06", "Please enter both numbers.");
-        } else if (b === 0) {
-            showResult("result06", "Cannot calculate a remainder with zero.");
-        } else {
-            showResult("result06", a + " % " + b + " = " + (a % b));
-        }
-    }
-
-    function cubeNumber() {
-        const a = getFirst();
-
-        if (a === null) {
-            showResult("result07", "Please enter a valid first number.");
-            return;
-        }
-
-        showResult("result07", a + " cubed = " + (a * a * a));
-    }
-
-    function averageNumbers() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result08", "Please enter both numbers.");
-            return;
-        }
-
-        showResult("result08", "Average = " + ((a + b) / 2));
-    }
-
-    function largerNumber() {
-        const a = getFirst();
-        const b = getSecond();
-
-        if (a === null || b === null) {
-            showResult("result09", "Please enter both numbers.");
-        } else if (a > b) {
-            showResult("result09", a + " is larger than " + b + ".");
-        } else if (b > a) {
-            showResult("result09", b + " is larger than " + a + ".");
-        } else {
-            showResult("result09", "Both numbers are equal.");
-        }
-    }
-
-    function greetUser() {
-        const name = document.getElementById("myName").value.trim();
-
-        if (name === "") {
-            showResult("result10", "Please enter your name first.");
-        } else {
-            showResult("result10", "Hello, " + name + "! Welcome to my webpage.");
-        }
-    }
-
-    function clearResults() {
-        for (let i = 1; i <= 10; i++) {
-            showResult("result" + String(i).padStart(2, "0"),
-                       "Your answer will appear here.");
-        }
-    }
-</script>
-
-</body>
-</html>
