@@ -1,21 +1,96 @@
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>t1a09-functions-by-Ektaj.html</title>
 
-  function myExampleFunctions(){
-    let myIn01 = parseInt(document.getElementById('myText01').value)
-    let mySum = myIn01 + myIn01
-    ley myReply = myIn01 + ' + ' + myIn01 + ' = ' + mySum
+    <script>
+        function myExampleFunction() {
+            let n = Number(document.getElementById("myText01").value);
+            return n + " + " + n + " = " + (n + n);
+        }
 
-  }
-</script>
-<h2 align=center>t1a09-functions-by-Ektaj.html</h2>
-<a href="https://www.w3schools.com/js/js_function.asp">Good reference to Javascript 
-  functions</a><br>
-Functions are used to sensibly organize code. Then they are "Called" elsewhere.
-Information can also be passed to functions (thats way more advanced).
-<h4>Example of working code</h4>
-<input type=text id="myText01" value="3"><br>
-<input type=button value="Function Example" onClick="{
-  document.getElementById('myDiv01').innerHTML = myExampleFunction() 
-  }">
+        function square() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n * n;
+        }
+
+        function cube() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n * n * n;
+        }
+
+        function doubleNumber() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n * 2;
+        }
+
+        function halfNumber() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n / 2;
+        }
+
+        function addFive() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n + 5;
+        }
+
+        function subtractFive() {
+            let n = Number(document.getElementById("myText01").value);
+            document.getElementById("myDiv01").innerHTML = n - 5;
+        }
+
+        function checkNumber() {
+            let n = Number(document.getElementById("myText01").value);
+
+            if (n > 0) {
+                document.getElementById("myDiv01").innerHTML = "Positive";
+            } else if (n < 0) {
+                document.getElementById("myDiv01").innerHTML = "Negative";
+            } else {
+                document.getElementById("myDiv01").innerHTML = "Zero";
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+<h2 align="center">t1a09-functions-by-Ektaj.html</h2>
+
+<a href="https://www.w3schools.com/js/js_function.asp">
+    JavaScript Functions Reference
+</a>
+
+<p>Functions organize code and run when they are called.</p>
+
+<h4>Enter a Number</h4>
+
+<input type="number" id="myText01" value="3">
+
+<br><br>
+
+<button onclick="document.getElementById('myDiv01').innerHTML = myExampleFunction()">
+    Add Number to Itself
+</button>
+
+<button onclick="square()">Square</button>
+
+<button onclick="cube()">Cube</button>
+
+<button onclick="doubleNumber()">Double</button>
+
+<button onclick="halfNumber()">Half</button>
+
+<button onclick="addFive()">Add 5</button>
+
+<button onclick="subtractFive()">Subtract 5</button>
+
+<button onclick="checkNumber()">Check Number</button>
+
+<br><br>
 
 <div id="myDiv01">...</div>
+
+</body>
+</html>
+
