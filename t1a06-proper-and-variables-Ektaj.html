@@ -1,26 +1,44 @@
 <!DOCTYPE html>
-<html lang "en">
-  <head>
-  <meta charset="UTF-8">
+<html>
+<head>
     <title>t1a06-proper-and-variables-Ektaj.html</title>
-<style>
-  b{ color: blue; }
-  </style>
+
+    <style>
+        b {
+            color: blue;
+        }
+    </style>
+
     <script>
-      function sayHello() {
-        myNum = 3;
-        myString = ' Hello ';
-        myFloat = 17.5;
-        myBool = true;
-        myOut = document.getElementById('myDiv01');
-        myOut.innerHTML = myNum = myString = myFloat = ', ' + myBool;
-        if (myBool) {myOut.innerHTML += ', WOW';}
-      }
+        function sayHello() {
+            let myNum = 3;
+            let myString = "Hello";
+            let myFloat = 17.5;
+            let myBool = true;
+
+            document.getElementById("myDiv01").innerHTML =
+                "Number: " + myNum + "<br>" +
+                "String: " + myString + "<br>" +
+                "Float: " + myFloat + "<br>" +
+                "Boolean: " + myBool;
+
+            if (myBool) {
+                document.getElementById("myDiv01").innerHTML +=
+                    "<br>WOW!";
+            }
+        }
     </script>
-  </head>
-  <body>
-    <p> This is <b>bold</b> text.</p>
-    <button onCLick="sayHello()'>Click Me</button>
+</head>
+
+<body>
+
+    <h2 align="center">Variables by Ektaj</h2>
+
+    <p>This is <b>bold</b> text.</p>
+
+    <button onclick="sayHello()">Click Me</button>
+
     <div id="myDiv01">...</div>
-  </body>
+
+</body>
 </html>
