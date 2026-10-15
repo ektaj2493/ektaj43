@@ -1,23 +1,114 @@
-<h2>align=center> t1a08-loops-by-Ektaj.html</h2>
-<a href=" ">Good reference to Javascript Loops </a><br> 
-<h4>Example working code</h4>
-Max loops: <input id="myNum01" type=number value="4" ><br>
-weird number: <input id="myWeird" type=number value="2"><br>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loops by Ektaj</title>
+</head>
 
-<input type=button value="Basic For loop with Decisions" onclick="{
-       document.getElementById('myDiv01').innerHTML= ' '
-       let myTemp = ' ' 
-        let myMax = parseInt(document.getElementById('myNum01').value)
+<body style="font-family: Arial;">
 
-  for(letmyLoop = 0; myLoop < myMax; myLoop== ){
-       if (myLoop * 2 > myMax){
-           myTemp += ' cool '
-       } 
-         myTemp += 'Loop number; ' + '<br>'
-  }
-  document.getElementById('myDiv01').innerHTML = myTemp
-}">
+<h2 align="center">t1a08-loops-by-Ektaj.html</h2>
 
-<input type=button value="Even number identifier" onclick="{
-       document.getElementById('myDiv01').innerHTML = ' '
-       
+<a href="https://www.w3schools.com/js/js_loop_for.asp">
+    Good Reference to JavaScript Loops
+</a>
+
+<h3>Enter Numbers</h3>
+
+Max loops: <input id="myNum01" type="number" value="4"><br><br>
+Weird number: <input id="myWeird" type="number" value="2"><br><br>
+
+<h3>1. Basic For Loop</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let text = '';
+for (let i = 0; i < max; i++) {
+    text += 'Loop number ' + i + '<br>';
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Run For Loop</button>
+
+<h3>2. Even Numbers</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let text = '';
+for (let i = 0; i <= max; i++) {
+    if (i % 2 == 0) {
+        text += i + ' is even<br>';
+    }
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Find Even Numbers</button>
+
+<h3>3. Odd Numbers</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let text = '';
+for (let i = 0; i <= max; i++) {
+    if (i % 2 != 0) {
+        text += i + ' is odd<br>';
+    }
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Find Odd Numbers</button>
+
+<h3>4. Multiplication Table</h3>
+<button onclick="
+let n = Number(document.getElementById('myWeird').value);
+let text = '';
+for (let i = 1; i <= 10; i++) {
+    text += n + ' x ' + i + ' = ' + (n * i) + '<br>';
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Show Times Table</button>
+
+<h3>5. Count Backwards</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let text = '';
+for (let i = max; i >= 0; i--) {
+    text += i + '<br>';
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Count Down</button>
+
+<h3>6. Add All Numbers</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let total = 0;
+for (let i = 1; i <= max; i++) {
+    total += i;
+}
+document.getElementById('myDiv01').innerHTML = 'Total = ' + total;
+">Calculate Total</button>
+
+<h3>7. Weird Number Loop</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let weird = Number(document.getElementById('myWeird').value);
+let text = '';
+for (let i = 0; i <= max; i++) {
+    if (weird != 0 && i % weird == 0) {
+        text += i + ' is divisible by ' + weird + '<br>';
+    }
+}
+document.getElementById('myDiv01').innerHTML =
+weird == 0 ? 'Weird number cannot be zero' : text;
+">Find Weird Numbers</button>
+
+<h3>8. While Loop</h3>
+<button onclick="
+let max = Number(document.getElementById('myNum01').value);
+let i = 1;
+let text = '';
+while (i <= max) {
+    text += 'Count ' + i + '<br>';
+    i++;
+}
+document.getElementById('myDiv01').innerHTML = text;
+">Run While Loop</button>
+
+<h3>Results</h3>
+<div id="myDiv01">Your results will appear here.</div>
+
+</body>
+</html>
