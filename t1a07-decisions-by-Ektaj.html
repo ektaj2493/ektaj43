@@ -1,369 +1,144 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Decisions by Ektaj</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #dbeafe, #ede9fe);
-            margin: 0;
-            padding: 25px;
-            color: #1e293b;
-        }
-
-        .container {
-            max-width: 850px;
-            margin: auto;
-            background: white;
-            padding: 28px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px #64748b44;
-        }
-
-        h1 {
-            text-align: center;
-            color: #6d28d9;
-        }
-
-        h2 {
-            color: #4338ca;
-            border-bottom: 2px solid #ddd6fe;
-            padding-bottom: 8px;
-        }
-
-        .example {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        input, button {
-            padding: 10px;
-            margin: 5px 3px;
-            border-radius: 7px;
-            font-size: 15px;
-        }
-
-        input {
-            border: 1px solid #94a3b8;
-            max-width: 180px;
-        }
-
-        button {
-            background: #6d28d9;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #4c1d95;
-        }
-
-        .result {
-            background: #ede9fe;
-            padding: 12px;
-            margin-top: 12px;
-            border-radius: 8px;
-            min-height: 20px;
-            overflow-wrap: anywhere;
-        }
-
-        .small {
-            color: #64748b;
-            font-size: 14px;
-        }
-    </style>
+    <title>Decisions by Ektaj</title>
 </head>
 
-<body>
-<div class="container">
+<body style="background-color: lightblue; font-family: Arial;">
 
-    <h1>🧠 JavaScript Decisions by Ektaj</h1>
+<h1 align="center">JavaScript Decisions by Ektaj</h1>
 
-    <p>
-        Decision statements allow JavaScript to make choices
-        based on conditions.
-    </p>
+<h3>Enter Your Numbers</h3>
 
-    <h2>Enter Your Numbers</h2>
+<input id="myNum01" type="number" value="4">
+<input id="myNum02" type="number" value="7">
 
-    <div class="example">
-        <label for="myNum01">First number:</label>
-        <input id="myNum01" type="number" value="4">
+<h3>1. Simple if</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n >= 3) {
+    document.getElementById('result01').innerHTML = n + ' is at least 3';
+}
+">Run If</button>
+<div id="result01">...</div>
 
-        <br>
+<h3>2. If Else</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n >= 3) {
+    document.getElementById('result02').innerHTML = n + ' is at least 3';
+} else {
+    document.getElementById('result02').innerHTML = n + ' is less than 3';
+}
+">Run If Else</button>
+<div id="result02">...</div>
 
-        <label for="myNum02">Second number:</label>
-        <input id="myNum02" type="number" value="7">
+<h3>3. Complex If</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n > -3 && n <= 100 && n != 3) {
+    document.getElementById('result03').innerHTML = n + ' meets the condition';
+} else {
+    document.getElementById('result03').innerHTML = n + ' does not meet the condition';
+}
+">Run Complex If</button>
+<div id="result03">...</div>
 
-        <p class="small">
-            Change the numbers and test each decision below.
-        </p>
-    </div>
+<h3>4. Positive, Negative, or Zero</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n > 0) {
+    document.getElementById('result04').innerHTML = 'Positive';
+} else if (n < 0) {
+    document.getElementById('result04').innerHTML = 'Negative';
+} else {
+    document.getElementById('result04').innerHTML = 'Zero';
+}
+">Check Number</button>
+<div id="result04">...</div>
 
-    <h2>1. Simple if Statement</h2>
-    <div class="example">
-        <p>Checks whether the number is greater than or equal to 3.</p>
-        <button onclick="simpleIf()">Run Simple If</button>
-        <div class="result" id="result01">Result appears here.</div>
-    </div>
+<h3>5. Even or Odd</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n % 2 == 0) {
+    document.getElementById('result05').innerHTML = 'Even';
+} else {
+    document.getElementById('result05').innerHTML = 'Odd';
+}
+">Check Even or Odd</button>
+<div id="result05">...</div>
 
-    <h2>2. if...else Statement</h2>
-    <div class="example">
-        <p>Checks whether the number is at least 3.</p>
-        <button onclick="ifElse()">Run If...Else</button>
-        <div class="result" id="result02">Result appears here.</div>
-    </div>
+<h3>6. Compare Two Numbers</h3>
+<button onclick="
+let a = Number(document.getElementById('myNum01').value);
+let b = Number(document.getElementById('myNum02').value);
+if (a > b) {
+    document.getElementById('result06').innerHTML = a + ' is bigger';
+} else if (a < b) {
+    document.getElementById('result06').innerHTML = b + ' is bigger';
+} else {
+    document.getElementById('result06').innerHTML = 'They are equal';
+}
+">Compare</button>
+<div id="result06">...</div>
 
-    <h2>3. Complex if Statement</h2>
-    <div class="example">
-        <p>Checks if the number is between -3 and 100 and is not 3.</p>
-        <button onclick="complexIf()">Run Complex If</button>
-        <div class="result" id="result03">Result appears here.</div>
-    </div>
-
-    <h2>4. else if Statement</h2>
-    <div class="example">
-        <p>Determines whether the number is positive, negative, or zero.</p>
-        <button onclick="positiveNegative()">Check Number</button>
-        <div class="result" id="result04">Result appears here.</div>
-    </div>
-
-    <h2>5. Even or Odd</h2>
-    <div class="example">
-        <p>Uses the remainder operator (%) to check the number.</p>
-        <button onclick="evenOdd()">Check Even or Odd</button>
-        <div class="result" id="result05">Result appears here.</div>
-    </div>
-
-    <h2>6. Compare Two Numbers</h2>
-    <div class="example">
-        <p>Compares the first number with the second number.</p>
-        <button onclick="compareNumbers()">Compare Numbers</button>
-        <div class="result" id="result06">Result appears here.</div>
-    </div>
-
-    <h2>7. Nested if Statement</h2>
-    <div class="example">
-        <p>Checks whether the number is positive and then checks if it is at least 10.</p>
-        <button onclick="nestedIf()">Run Nested If</button>
-        <div class="result" id="result07">Result appears here.</div>
-    </div>
-
-    <h2>8. Grade Calculator</h2>
-    <div class="example">
-        <p>Uses your first number as a mark out of 100.</p>
-        <button onclick="gradeCheck()">Check Grade</button>
-        <div class="result" id="result08">Result appears here.</div>
-    </div>
-
-    <h2>9. Divisible by 5 and 10</h2>
-    <div class="example">
-        <p>Uses the AND (&&) operator to check divisibility by both 5 and 10.</p>
-        <button onclick="divisibilityCheck()">Check Divisibility</button>
-        <div class="result" id="result09">Result appears here.</div>
-    </div>
-
-    <h2>10. Number Range Checker</h2>
-    <div class="example">
-        <p>Checks whether the number is between 1 and 20, inclusive.</p>
-        <button onclick="rangeCheck()">Check Range</button>
-        <div class="result" id="result10">Result appears here.</div>
-    </div>
-
-    <h2>11. Reset Results</h2>
-    <div class="example">
-        <button onclick="resetResults()">Clear All Results</button>
-    </div>
-
-</div>
-
-<script>
-    function getNumber() {
-        return document.getElementById("myNum01").valueAsNumber;
+<h3>7. Nested If</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n > 0) {
+    if (n >= 10) {
+        document.getElementById('result07').innerHTML = 'Positive and at least 10';
+    } else {
+        document.getElementById('result07').innerHTML = 'Positive but less than 10';
     }
+} else {
+    document.getElementById('result07').innerHTML = 'Not positive';
+}
+">Run Nested If</button>
+<div id="result07">...</div>
 
-    function getSecondNumber() {
-        return document.getElementById("myNum02").valueAsNumber;
-    }
+<h3>8. Grade Calculator</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n < 0 || n > 100) {
+    document.getElementById('result08').innerHTML = 'Enter 0 to 100';
+} else if (n >= 90) {
+    document.getElementById('result08').innerHTML = 'Grade A';
+} else if (n >= 80) {
+    document.getElementById('result08').innerHTML = 'Grade B';
+} else if (n >= 70) {
+    document.getElementById('result08').innerHTML = 'Grade C';
+} else if (n >= 60) {
+    document.getElementById('result08').innerHTML = 'Grade D';
+} else {
+    document.getElementById('result08').innerHTML = 'Grade F';
+}
+">Check Grade</button>
+<div id="result08">...</div>
 
-    function showResult(id, message) {
-        document.getElementById(id).textContent = message;
-    }
+<h3>9. Divisible by 5 and 10</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n % 5 == 0 && n % 10 == 0) {
+    document.getElementById('result09').innerHTML = 'Divisible by both';
+} else {
+    document.getElementById('result09').innerHTML = 'Not divisible by both';
+}
+">Check Divisibility</button>
+<div id="result09">...</div>
 
-    // 1. Simple if statement
-    function simpleIf() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result01", "Please enter a valid number.");
-            return;
-        }
-
-        if (myIn01 >= 3) {
-            showResult("result01", myIn01 + " is greater than or equal to 3.");
-        } else {
-            showResult("result01", "The condition is false.");
-        }
-    }
-
-    // 2. if...else statement
-    function ifElse() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result02", "Please enter a valid number.");
-            return;
-        }
-
-        if (myIn01 >= 3) {
-            showResult("result02", myIn01 + " is greater than or equal to 3.");
-        } else {
-            showResult("result02", myIn01 + " is less than 3.");
-        }
-    }
-
-    // 3. Complex if with logical operators
-    function complexIf() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result03", "Please enter a valid number.");
-            return;
-        }
-
-        if ((myIn01 !== 3 || myIn01 > -3) && myIn01 <= 100) {
-            showResult("result03", myIn01 + " meets the complex condition.");
-        } else {
-            showResult("result03", myIn01 + " does not meet the complex condition.");
-        }
-    }
-
-    // 4. else if statement
-    function positiveNegative() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result04", "Please enter a valid number.");
-        } else if (myIn01 > 0) {
-            showResult("result04", myIn01 + " is positive.");
-        } else if (myIn01 < 0) {
-            showResult("result04", myIn01 + " is negative.");
-        } else {
-            showResult("result04", "The number is zero.");
-        }
-    }
-
-    // 5. Even or odd
-    function evenOdd() {
-        let myIn01 = getNumber();
-
-        if (!Number.isInteger(myIn01)) {
-            showResult("result05", "Please enter a whole number.");
-        } else if (myIn01 % 2 === 0) {
-            showResult("result05", myIn01 + " is even.");
-        } else {
-            showResult("result05", myIn01 + " is odd.");
-        }
-    }
-
-    // 6. Compare two numbers
-    function compareNumbers() {
-        let a = getNumber();
-        let b = getSecondNumber();
-
-        if (Number.isNaN(a) || Number.isNaN(b)) {
-            showResult("result06", "Please enter both numbers.");
-        } else if (a > b) {
-            showResult("result06", a + " is greater than " + b + ".");
-        } else if (a < b) {
-            showResult("result06", a + " is less than " + b + ".");
-        } else {
-            showResult("result06", "Both numbers are equal.");
-        }
-    }
-
-    // 7. Nested if statement
-    function nestedIf() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result07", "Please enter a valid number.");
-            return;
-        }
-
-        if (myIn01 > 0) {
-            if (myIn01 >= 10) {
-                showResult("result07", "The number is positive and at least 10.");
-            } else {
-                showResult("result07", "The number is positive but less than 10.");
-            }
-        } else {
-            showResult("result07", "The number is not positive.");
-        }
-    }
-
-    // 8. Grade calculator
-    function gradeCheck() {
-        let mark = getNumber();
-
-        if (Number.isNaN(mark)) {
-            showResult("result08", "Please enter a mark.");
-        } else if (mark < 0 || mark > 100) {
-            showResult("result08", "Enter a mark from 0 to 100.");
-        } else if (mark >= 90) {
-            showResult("result08", "Grade: A");
-        } else if (mark >= 80) {
-            showResult("result08", "Grade: B");
-        } else if (mark >= 70) {
-            showResult("result08", "Grade: C");
-        } else if (mark >= 60) {
-            showResult("result08", "Grade: D");
-        } else {
-            showResult("result08", "Grade: F");
-        }
-    }
-
-    // 9. AND operator
-    function divisibilityCheck() {
-        let myIn01 = getNumber();
-
-        if (!Number.isInteger(myIn01)) {
-            showResult("result09", "Please enter a whole number.");
-        } else if (myIn01 % 5 === 0 && myIn01 % 10 === 0) {
-            showResult("result09", myIn01 + " is divisible by both 5 and 10.");
-        } else {
-            showResult("result09", myIn01 + " is not divisible by both 5 and 10.");
-        }
-    }
-
-    // 10. Range check
-    function rangeCheck() {
-        let myIn01 = getNumber();
-
-        if (Number.isNaN(myIn01)) {
-            showResult("result10", "Please enter a valid number.");
-        } else if (myIn01 >= 1 && myIn01 <= 20) {
-            showResult("result10", myIn01 + " is inside the range 1 to 20.");
-        } else {
-            showResult("result10", myIn01 + " is outside the range 1 to 20.");
-        }
-    }
-
-    // 11. Reset all result messages
-    function resetResults() {
-        for (let i = 1; i <= 10; i++) {
-            showResult("result" + String(i).padStart(2, "0"),
-                       "Result appears here.");
-        }
-    }
-</script>
+<h3>10. Number Range</h3>
+<button onclick="
+let n = Number(document.getElementById('myNum01').value);
+if (n >= 1 && n <= 20) {
+    document.getElementById('result10').innerHTML = 'Between 1 and 20';
+} else {
+    document.getElementById('result10').innerHTML = 'Outside the range';
+}
+">Check Range</button>
+<div id="result10">...</div>
 
 </body>
 </html>
+  
