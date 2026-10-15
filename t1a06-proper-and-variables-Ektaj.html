@@ -21,24 +21,101 @@
                 "String: " + myString + "<br>" +
                 "Float: " + myFloat + "<br>" +
                 "Boolean: " + myBool;
+        }
 
-            if (myBool) {
-                document.getElementById("myDiv01").innerHTML +=
-                    "<br>WOW!";
-            }
+        function addNumbers() {
+            let a = 5;
+            let b = 10;
+            document.getElementById("myDiv01").innerHTML =
+                "5 + 10 = " + (a + b);
+        }
+
+        function multiplyNumbers() {
+            let a = 4;
+            let b = 3;
+            document.getElementById("myDiv01").innerHTML =
+                "4 x 3 = " + (a * b);
+        }
+
+        function changeString() {
+            let myString = "JavaScript is fun!";
+            document.getElementById("myDiv01").innerHTML = myString;
+        }
+
+        function changeNumber() {
+            let myNum = 100;
+            document.getElementById("myDiv01").innerHTML =
+                "My number is " + myNum;
+        }
+
+        function checkBoolean() {
+            let myBool = true;
+            document.getElementById("myDiv01").innerHTML =
+                "Is it true? " + myBool;
+        }
+
+        function calculateArea() {
+            let width = 5;
+            let height = 4;
+            let area = width * height;
+            document.getElementById("myDiv01").innerHTML =
+                "Area = " + area;
+        }
+
+        function changeVariable() {
+            let score = 10;
+            score = 20;
+            document.getElementById("myDiv01").innerHTML =
+                "New score = " + score;
+        }
+
+        function joinStrings() {
+            let first = "Hello";
+            let second = "Ektaj";
+            document.getElementById("myDiv01").innerHTML =
+                first + " " + second;
+        }
+
+        function variableTypes() {
+            let age = 16;
+            let name = "Ektaj";
+            let isStudent = true;
+
+            document.getElementById("myDiv01").innerHTML =
+                "Age: " + age + "<br>" +
+                "Name: " + name + "<br>" +
+                "Student: " + isStudent;
+        }
+
+        function clearResult() {
+            document.getElementById("myDiv01").innerHTML = "...";
         }
     </script>
 </head>
 
 <body>
 
-    <h2 align="center">Variables by Ektaj</h2>
+    <h2 align="center">JavaScript Variables by Ektaj</h2>
 
     <p>This is <b>bold</b> text.</p>
 
-    <button onclick="sayHello()">Click Me</button>
+    <h3>Choose an Example</h3>
 
-    <div id="myDiv01">...</div>
+    <button onclick="sayHello()">1. Basic Variables</button>
+    <button onclick="addNumbers()">2. Add Numbers</button>
+    <button onclick="multiplyNumbers()">3. Multiply Numbers</button>
+    <button onclick="changeString()">4. String Variable</button>
+    <button onclick="changeNumber()">5. Number Variable</button>
+    <button onclick="checkBoolean()">6. Boolean Variable</button>
+    <button onclick="calculateArea()">7. Calculate Area</button>
+    <button onclick="changeVariable()">8. Change a Variable</button>
+    <button onclick="joinStrings()">9. Join Strings</button>
+    <button onclick="variableTypes()">10. Different Types</button>
+    <button onclick="clearResult()">Clear</button>
+
+    <h3>Result</h3>
+
+    <div id="myDiv01">Click a button to see the result.</div>
 
 </body>
 </html>
