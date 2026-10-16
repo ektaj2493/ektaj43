@@ -1,33 +1,148 @@
-<h6> version 0.01</h6>
-<h1>aline=center>t1a03-forms-ektaj.html</h1>
-<h3><font color+green>proving that you can use: Forms 2023<font></font></h3><br>
-The following are all form elements (add to them):<br>
-<form >
-  First Name:<input type=text id="Text01" value="Ektaj"><br>
-  Checkbox: <br>
-  Beef: <input type=checkbox><br>
-  veggy: <input type=checkbox><br>
-  Radio Buttons: <br>
-  95.4 <input type=radio name="myRad01" value=""><br>
-  101 <input type=radio name="myRad01" value=""><br>
-hidden:<input type=hidden ><br>
-File:<input type=file><br>
-reset:<input type =reset><br>
-Submit (advanced)<input type=submit><br>
-Button: <input type=button value="click" onclick="{
-          document.getElementById('myArea01').value = 'Cool'
-}><br>
-Text area:<br>
-<textarea id="myArea01" cols=60 rows=5 > Cool this works </form>textarea><br>
 
-Select Box:<BR>
-<select id="mySelect01" size=2 onChange="{
-  document.getElemtnById('myArea01').value =
-  document.getElementById('mySelect01').value
-  }">
-  <option value='myDog'>Dog
-  <option value='myCat'>Cat
-  <option value='myMouse'>Mouse
-     <a href="../index.html">Back to Home</a>
-   </select>
-   </form>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>t1a03-forms-ektaj.html</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background-color: lightblue;
+      margin: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: darkblue;
+    }
+
+    h3 {
+      color: green;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+    }
+
+    input, select, textarea {
+      margin: 5px;
+    }
+
+    button {
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h6>Version 0.01</h6>
+
+<h1>t1a03-forms-ektaj.html</h1>
+
+<h3>Proving that you can use HTML Forms!</h3>
+
+<p>The following are form elements and examples.</p>
+
+<form id="myForm">
+
+  <!-- Text input -->
+  First Name:
+  <input type="text" id="Text01" value="Ektaj">
+  <br><br>
+
+  <!-- Checkboxes -->
+  Favorite Food:<br>
+  <input type="checkbox" id="beef" value="Beef">
+  <label for="beef">Beef</label><br>
+
+  <input type="checkbox" id="veggy" value="Vegetables">
+  <label for="veggy">Vegetables</label><br><br>
+
+  <!-- Radio buttons -->
+  Favorite Radio Station:<br>
+  <input type="radio" name="myRad01" value="95.4">
+  95.4<br>
+
+  <input type="radio" name="myRad01" value="101">
+  101<br><br>
+
+  <!-- Hidden input -->
+  <input type="hidden" value="Example hidden data">
+  Hidden input (not visible on the page)<br><br>
+
+  <!-- File input -->
+  Choose a File:
+  <input type="file" id="myFile">
+  <br><br>
+
+  <!-- Number input -->
+  Your Age:
+  <input type="number" min="1" max="120" value="16">
+  <br><br>
+
+  <!-- Date input -->
+  Birthday:
+  <input type="date">
+  <br><br>
+
+  <!-- Text area -->
+  Message:<br>
+  <textarea id="myArea01" cols="40" rows="4">Cool, this works!</textarea>
+  <br><br>
+
+  <!-- Select box -->
+  Choose an Animal:
+  <select id="mySelect01" onchange="showAnimal()">
+    <option value="Dog">Dog</option>
+    <option value="Cat">Cat</option>
+    <option value="Mouse">Mouse</option>
+  </select>
+  <br><br>
+
+  <!-- Buttons -->
+  <button type="button" onclick="showMessage()">Click Me</button>
+
+  <input type="reset" value="Reset Form">
+
+  <input type="submit" value="Submit Form">
+
+</form>
+
+<p id="myResult"></p>
+
+<script>
+  // Button example
+  function showMessage() {
+    document.getElementById("myArea01").value = "Cool!";
+  }
+
+  // Select box example
+  function showAnimal() {
+    let animal = document.getElementById("mySelect01").value;
+
+    document.getElementById("myArea01").value =
+      "You selected: " + animal;
+  }
+
+  // Form submit example
+  document.getElementById("myForm").onsubmit = function(event) {
+    event.preventDefault();
+
+    let name = document.getElementById("Text01").value;
+
+    document.getElementById("myResult").textContent =
+      "Hello " + name + "! Your form works!";
+  };
+</script>
+
+<br>
+<a href="../index.html">Back to Home</a>
+
+</body>
+</html>
