@@ -1,36 +1,97 @@
-<h2 align =center>t1a12-objects-Ektaj.html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>t1a12-objects-Ektaj.html</title>
+
   <script>
- //   What might be a good idea to declare here?
-    
-  </script>
-
-  < a href = " ">Good reference to Javascript Objects (you find one)</a><br>
-
-  Objects are stored named variables
-
-
-  <h4> Example working Objects code</h4>
-  
-  Nothing: <input type=text id="myText01" value="Useless at the moment"><br>
-
-  <input type=button value="Example Object Set and Show" onClick="{
-
+    // Global object: can be used by all functions on this page
     let myPerson = {
-    'firstName' : 'John',
-    'lasttName' : 'Doe',
-    'age'       : 50,
-    'eyeColor'  : 'blue'
+      firstName: "John",
+      lastName: "Doe",
+      age: 50,
+      eyeColor: "blue",
+      hobby: "Gaming",
+      city: "Vancouver"
+    };
+
+    // Function to display the object
+    function showObject() {
+      let output = "<h3>My Person Object</h3>";
+
+      output += "First Name: " + myPerson.firstName + "<br>";
+      output += "Last Name: " + myPerson.lastName + "<br>";
+      output += "Age: " + myPerson.age + "<br>";
+      output += "Eye Color: " + myPerson.eyeColor + "<br>";
+      output += "Hobby: " + myPerson.hobby + "<br>";
+      output += "City: " + myPerson.city + "<br>";
+
+      output += "<br><b>Full Name:</b> " +
+        myPerson.firstName + " " + myPerson.lastName;
+
+      document.getElementById("myDiv01").innerHTML = output;
     }
 
-    document.getElementById('myDiv01').innerHTML = '<br>myPerson Object has
-    properties: <br>'
-       document.getElementById('myDiv01').innerHTML += 'firstName: ' +
-    myPerson.firstName + '<br>'
-      document.getElementById('myDiv01').innerHTML += 'You do the others  <br> '
+    // Function to change an object property
+    function changeAge() {
+      myPerson.age = myPerson.age + 1;
+      showObject();
+    }
+  </script>
+</head>
 
-    }">
+<body>
+  <h2 style="text-align: center;">
+    t1a12-objects-Ektaj.html
+  </h2>
 
-  <div> id="myDiv01">...</div>
-  <b>Lets talk local and global variables, why might it be best to declare the object
-  in the script tag?</b>
-  <br>
+  <p>
+    JavaScript objects store related information using
+    named properties and values.
+  </p>
+
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects"
+     target="_blank">
+    JavaScript Objects Reference
+  </a>
+
+  <hr>
+
+  <h3>Example Working Objects Code</h3>
+
+  <input type="button"
+         value="Show Person Object"
+         onclick="showObject()">
+
+  <input type="button"
+         value="Increase Age"
+         onclick="changeAge()">
+
+  <div id="myDiv01">
+    Click the button to see the object!
+  </div>
+
+  <hr>
+
+  <h3>Local vs. Global Variables</h3>
+
+  <p>
+    <b>Global variable:</b> The myPerson object is declared
+    inside the script tag, outside the functions. This lets
+    multiple functions access and change the same object.
+  </p>
+
+  <p>
+    <b>Local variable:</b> The output variable is declared
+    inside showObject(). It can only be used inside that
+    function.
+  </p>
+
+  <p>
+    Declaring an object outside the functions is useful when
+    multiple functions need to access the same data. However,
+    keeping variables local when possible helps prevent
+    accidental changes.
+  </p>
+</body>
+</html>
