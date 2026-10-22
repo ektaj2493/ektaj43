@@ -1,108 +1,43 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Extend Class - Animal</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f4f8;
-      padding: 30px;
+<script>
+  class myAnimal {
+    constructor(passName, passAge) {
+      this.myName = passName;
+      this.myAge = passAge;
     }
 
-    h2 {
-      color: #2457a7;
+    myShow() {
+      document.getElementById('myDiv01').innerHTML =
+        'Hello ' + this.myName + '<br>';
     }
+  }
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 25px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px #00000020;
+  class myCat extends myAnimal {
+    myShow() {
+      document.getElementById('myDiv01').innerHTML =
+        this.myName + ' is a great cat!';
     }
+  }
 
-    button {
-      padding: 10px 16px;
-      margin: 8px;
-      background-color: #2457a7;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+  function showAnimal() {
+    let myDog = new myAnimal('Snickers', 5);
+    myDog.myShow();
+  }
 
-    button:hover {
-      background-color: #163b75;
-    }
+  function showCat() {
+    let myPet = new myCat('Fluffy', 14);
+    myPet.myShow();
+  }
+</script>
 
-    #myDiv01 {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #e6f0ff;
-      border-radius: 8px;
-      min-height: 25px;
-    }
-  </style>
-</head>
+<h2>t1a14-extend-class-by-Ektaj.html</h2>
+Extending a pre-existing Class<br><br>
 
-<body>
-  <div class="container">
-    <h2>t1a14-extend-class-by-Ektaj.html</h2>
+<h4>Example Animal Class</h4>
+<button onclick="showAnimal()">Show Animal</button>
 
-    <p>Learn how to extend a pre-existing JavaScript class.</p>
+<h4>Example Extending Animal Class</h4>
+<button onclick="showCat()">Show Cat</button>
 
-    <h3>Example 1: Animal Class</h3>
-    <button onclick="showAnimal()">
-      Create and Show Animal
-    </button>
-
-    <h3>Example 2: Extend Animal Class</h3>
-    <button onclick="showCat()">
-      Create and Show Cat
-    </button>
-
-    <div id="myDiv01">Your output will appear here.</div>
-  </div>
-
-  <script>
-    // Parent class
-    class myAnimal {
-      constructor(passName, passAge) {
-        this.myName = passName;
-        this.myAge = passAge;
-      }
-
-      myShow() {
-        document.getElementById("myDiv01").innerHTML =
-          `Hello! My name is ${this.myName} and I am ${this.myAge} years old.`;
-      }
-    }
-
-    // Child class extends the Animal class
-    class myCat extends myAnimal {
-      myShow() {
-        document.getElementById("myDiv01").innerHTML =
-          `${this.myName} is a great cat! My cat is ${this.myAge} years old.`;
-      }
-    }
-
-    // Display an animal
-    function showAnimal() {
-      const myDog = new myAnimal("Snickers", 5);
-      myDog.myShow();
-    }
-
-    // Display a cat
-    function showCat() {
-      const myPet = new myCat("Fluffy", 14);
-      myPet.myShow();
-    }
-  </script>
-</body>
-</html>
+<div id="myDiv01">Output goes here</div>
