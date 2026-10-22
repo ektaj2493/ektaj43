@@ -1,41 +1,88 @@
-<script>
-  class myAnimal {
-    constructor(passName, passAge) {
-      this.myName = passName;
-      this.myAge = passAge;
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Extend Animal Class</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background-color: #f0f8ff;
     }
 
-    myShow() {
-      document.getElementById('myDiv01').innerHTML =
-        'Hello ' + this.myName + '<br>';
+    h2 {
+      color: #2457a7;
     }
-  }
 
-  class myCat extends myAnimal {
-    myShow() {
-      document.getElementById('myDiv01').innerHTML =
-        this.myName + ' is a great cat!';
+    button {
+      padding: 10px;
+      margin: 5px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
-  }
 
-  function showAnimal() {
-    let myDog = new myAnimal('Snickers', 5);
-    myDog.myShow();
-  }
+    button:hover {
+      background-color: #2457a7;
+    }
 
-  function showCat() {
-    let myPet = new myCat('Fluffy', 14);
-    myPet.myShow();
-  }
-</script>
+    #myDiv01 {
+      margin: 20px;
+      padding: 15px;
+      font-size: 20px;
+      color: #2457a7;
+    }
+  </style>
+</head>
 
-<h2>t1a14-extend-class-by-Ektaj.html</h2>
-Extending a pre-existing Class<br><br>
+<body>
 
-<h4>Example Animal Class</h4>
-<button onclick="showAnimal()">Show Animal</button>
+  <h2>t1a14-extend-class-by-Ektaj.html</h2>
+  <p>Extending a pre-existing Class</p>
 
-<h4>Example Extending Animal Class</h4>
-<button onclick="showCat()">Show Cat</button>
+  <h3>Example Animal Class</h3>
+  <button onclick="showAnimal()">Show Animal</button>
 
-<div id="myDiv01">Output goes here</div>
+  <h3>Example Extending Animal Class</h3>
+  <button onclick="showCat()">Show Cat</button>
+
+  <div id="myDiv01">Your output will appear here!</div>
+
+  <script>
+    class myAnimal {
+      constructor(passName, passAge) {
+        this.myName = passName;
+        this.myAge = passAge;
+      }
+
+      myShow() {
+        document.getElementById('myDiv01').innerHTML =
+          'Hello, my name is ' + this.myName +
+          ' and I am ' + this.myAge + ' years old!';
+      }
+    }
+
+    class myCat extends myAnimal {
+      myShow() {
+        document.getElementById('myDiv01').innerHTML =
+          this.myName + ' is a great cat! Age: ' +
+          this.myAge;
+      }
+    }
+
+    function showAnimal() {
+      let myDog = new myAnimal('Snickers', 5);
+      myDog.myShow();
+    }
+
+    function showCat() {
+      let myPet = new myCat('Fluffy', 14);
+      myPet.myShow();
+    }
+  </script>
+
+</body>
+</html>
