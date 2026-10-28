@@ -1,25 +1,226 @@
-<h2> align=center>t1a13-Classes-by-Ektaj.html</h2>
-<a href=" ">Find a good reference to Javascript Classes</a><br>
-Classes are both Objects that store variables (Called Properties) and Functions 
-that work on the variables (called Methods)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JavaScript Classes by Ektaj</title>
 
-<h4>Example working Classes code</h4>
-Nothing: <input type=text id="myText01" value="Useless at the moment"><br>
-<input type=button value="Example Class Set and Show Class Animal" onClick="{
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #172033;
+      background: #f3f6fb;
+    }
 
-  class myAnimal {
-    constructior(passName, passAge) {
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 28px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px #17203318;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    h1 {
+      color: #2457a7;
+    }
+
+    .example {
+      margin-top: 24px;
+      padding: 20px;
+      border: 1px solid #d7e0ef;
+      border-radius: 10px;
+      background: #f9fbff;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    input {
+      box-sizing: border-box;
+      max-width: 100%;
+      padding: 10px;
+      border: 1px solid #aebbd0;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+    }
+
+    button {
+      margin: 14px 8px 0 0;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      background: #2457a7;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #183f80;
+    }
+
+    #myDiv01 {
+      min-height: 48px;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 6px;
+      background: #eaf2ff;
+      overflow-wrap: anywhere;
+    }
+
+    a {
+      color: #2457a7;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>JavaScript Classes</h1>
+
+    <p>
+      A JavaScript <strong>class</strong> is a template for creating objects.
+      Objects can store data in <strong>properties</strong> and provide
+      functions called <strong>methods</strong> that work with that data.
+    </p>
+
+    <p>
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_classes"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Read the MDN guide to JavaScript classes
+      </a>
+    </p>
+
+    <section class="example">
+      <h2>Example: Create an Animal</h2>
+
+      <p>
+        Enter an animal's name and age, then click the button
+        to create an object and display its information.
+      </p>
+
+      <label for="myNameInput">Animal name</label>
+      <input
+        type="text"
+        id="myNameInput"
+        value="Snicker"
+        maxlength="40"
+      >
+
+      <label for="myAgeInput">Animal age</label>
+      <input
+        type="number"
+        id="myAgeInput"
+        value="5"
+        min="0"
+        max="200"
+      >
+
+      <div>
+        <button type="button" id="myCreateButton">
+          Create and Show Animal
+        </button>
+
+        <button type="button" id="myResetButton">
+          Reset Example
+        </button>
+      </div>
+
+      <div id="myDiv01" aria-live="polite">
+        Your animal's information will appear here.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Define the Animal class
+    class myAnimal {
+
+      // Constructor initializes the object's properties
+      constructor(passName, passAge) {
         this.myName = passName;
         this.myAge = passAge;
-  }
-  myShow(){
-    document.getElementById('myDiv01').innerHTML = 'hello '+ this.myName + '. You
-  are ' + this.myAge + ' years old<br>
       }
-  } // end class myAnimal
 
-  myDog = new myAnimal('Snicker', 5)
-  myDog.myShow()
-  }">
-<div id="myDiv01">...</div>
-  
+      // Method returns a message about the animal
+      myShow() {
+        return `Hello, ${this.myName}! You are ${this.myAge} years old.`;
+      }
+    }
+
+    // Get HTML elements
+    const myNameInput = document.getElementById("myNameInput");
+    const myAgeInput = document.getElementById("myAgeInput");
+    const myDiv01 = document.getElementById("myDiv01");
+
+    const myCreateButton =
+      document.getElementById("myCreateButton");
+
+    const myResetButton =
+      document.getElementById("myResetButton");
+
+    // Create and show an animal
+    myCreateButton.onclick = function () {
+
+      const myName = myNameInput.value.trim();
+      const myAge = Number(myAgeInput.value);
+
+      // Check the animal's name
+      if (!myName) {
+        myDiv01.textContent = "Please enter an animal name.";
+        myNameInput.focus();
+        return;
+      }
+
+      // Check the animal's age
+      if (
+        myAgeInput.value === "" ||
+        !Number.isFinite(myAge) ||
+        myAge < 0 ||
+        myAge > 200
+      ) {
+        myDiv01.textContent = "Please enter an age from 0 to 200.";
+        myAgeInput.focus();
+        return;
+      }
+
+      // Create a new object from the class
+      const myDog = new myAnimal(myName, myAge);
+
+      // Display the object's method result
+      myDiv01.textContent = myDog.myShow();
+    };
+
+    // Reset the example
+    myResetButton.onclick = function () {
+
+      myNameInput.value = "Snicker";
+      myAgeInput.value = "5";
+
+      myDiv01.textContent =
+        "Your animal's information will appear here.";
+    };
+  </script>
+</body>
+</html>
+```
