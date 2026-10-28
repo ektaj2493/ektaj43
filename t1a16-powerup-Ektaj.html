@@ -1,5 +1,3 @@
-from pathlib import Path
-
 html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,9 +139,6 @@ html = '''<!DOCTYPE html>
   </script>
 </body>
 </html>
-'''
 
-path = Path("/mnt/data/t1a16-powerup-Ektaj.html")
-path.write_text(html, encoding="utf-8")
-print(f"Created {path.name} ({path.stat().st_size:,} bytes)")
+
 
