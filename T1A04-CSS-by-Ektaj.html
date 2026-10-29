@@ -1,39 +1,252 @@
-<body
-  Version 0.01</br>
-  <h1 align=center> T1A04-CSS-by-Ektaj.html</h1>
+from pathlib import Path
 
-  reference link
-  <a href ="https://www.w3schools.com/cssref/default.asp">w3schools</a><br>
+html = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1A04 - CSS by Ektaj</title>
 
-  Properly done with a .css file listing all css commands for your
-  website<br>
-  Another way to do CSS (Cascading Style Sheets: determine colors
-  locations extra effects on the tags on your web page)<br>
-
-  Here is typical in document style 
-  <pre>
-    b {
-    color: #00ff00;
+  <style>
+    /* Internal CSS: styles that apply to elements on this page */
+    :root {
+      --myPrimary: #2457a7;
+      --myBackground: #f2f6fc;
+      --myText: #182338;
+      --myPanel: #ffffff;
     }
-  </pre><br>
-  I do css inside the tag. It overpowers all other methods <br>
 
-  <b> This is bold</b><br>
-  <b id="myB1 syle="color:#00ff00; background-Color:blue; ">This is bold</b>
-  <input typw=bitton value=Change onClic="{
-    document.getElementById('myB1').style.color= 'red'
-    document.getElementById('myB1').style.bckgroundColor = 'yellow'
-    }"><br>
+    * { box-sizing: border-box; }
 
-  <textarea sty;e=" baclground-image: url('myImgNew.jpg'); position:relative; left:0;
-    tope:0; width:200; height:50; ">
-    Advanced see if you move this text areea
-  </textarea><br>
-  <br><br><br> <br> <br> <br> <br> <br> <br> <br> <br>  <br>
-  <img srce="myImage01.jpg" width=200 style=" border-radius:200px">
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: var(--myText);
+      background: var(--myBackground);
+    }
 
+    main {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 28px;
+      background: var(--myPanel);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px #18233818;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: var(--myPrimary);
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 28px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #dce6f5;
+    }
+
+    a { color: var(--myPrimary); }
+    a:hover { color: #12356d; }
+
+    .myVersion {
+      color: #61718a;
+      font-size: 0.9rem;
+    }
+
+    .myDemoBox {
+      margin: 18px 0;
+      padding: 18px;
+      border: 1px solid #dce6f5;
+      border-radius: 10px;
+      background: #f9fbff;
+    }
+
+    .myCode {
+      overflow-x: auto;
+      padding: 14px;
+      border-radius: 8px;
+      color: #d9e8ff;
+      background: #172338;
+      font-family: Consolas, monospace;
+    }
+
+    .myExampleBold {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 8px 12px;
+      color: #00a000;
+      background: #e8f7ff;
+      border-radius: 6px;
+    }
+
+    button {
+      margin: 6px 6px 6px 0;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 7px;
+      color: white;
+      background: var(--myPrimary);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover { background: #173f82; }
+    button:focus-visible, a:focus-visible, textarea:focus-visible {
+      outline: 3px solid #f3b61f;
+      outline-offset: 3px;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 100px;
+      margin-top: 10px;
+      padding: 12px;
+      resize: both;
+      border: 2px solid #a9bad3;
+      border-radius: 8px;
+      color: #182338;
+      background: linear-gradient(135deg, #fff, #e8f7ff);
+      font: inherit;
+      transition: transform 180ms ease;
+    }
+
+    .myImageWrap { text-align: center; }
+    .myCircleImage {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border: 5px solid #dce6f5;
+      border-radius: 50%;
+      background: #e8eef8;
+    }
+
+    .myNote { color: #61718a; font-size: 0.92rem; }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      main { padding: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <p class="myVersion">Version 0.02</p>
+    <h1>T1A04 - CSS by Ektaj</h1>
+
+    <p>
+      CSS stands for <strong>Cascading Style Sheets</strong>. It controls the
+      colors, layout, spacing, and visual effects of HTML elements.
+    </p>
+
+    <p>
+      Reference:
+      <a href="https://www.w3schools.com/cssref/default.asp"
+         target="_blank" rel="noopener noreferrer">
+        W3Schools CSS Reference
+      </a>
+      ·
+      <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"
+         target="_blank" rel="noopener noreferrer">
+        MDN CSS Guide
+      </a>
+    </p>
+
+    <h2>1. Internal CSS example</h2>
+    <p>
+      CSS can be written inside a <code>&lt;style&gt;</code> element in the
+      document's <code>&lt;head&gt;</code>. This rule makes every bold element
+      green unless a more specific style overrides it.
+    </p>
+    <pre class="myCode">b {
+  color: #00ff00;
+}</pre>
+
+    <h2>2. Inline CSS and JavaScript</h2>
+    <div class="myDemoBox">
+      <b>This is bold text.</b><br>
+      <b id="myB1" class="myExampleBold"
+         style="color: #00a000; background-color: #e8f7ff;">
+        This bold text can change style.
+      </b>
+      <br>
+      <button type="button" id="myChangeButton">Change text style</button>
+      <button type="button" id="myResetButton">Reset style</button>
+      <p class="myNote">
+        Inline CSS is written in an element's <code>style</code> attribute.
+        JavaScript can change these style properties while the page is running.
+      </p>
+    </div>
+
+    <h2>3. Move a text area</h2>
+    <div class="myDemoBox">
+      <p>Use the buttons to move the text area left or right. You can also resize it from its corner.</p>
+      <button type="button" id="myMoveLeftButton">Move left</button>
+      <button type="button" id="myMoveRightButton">Move right</button>
+      <button type="button" id="myCenterButton">Center</button>
+      <textarea id="myTextArea" aria-label="Movable example text area">Advanced CSS example: use the buttons above to move this text area.</textarea>
+    </div>
+
+    <h2>4. Rounded image</h2>
+    <div class="myDemoBox myImageWrap">
+      <img
+        id="myImage01"
+        class="myCircleImage"
+        src="myImage01.jpg"
+        alt="Example image shown in a circular frame"
+        onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23dce6f5%22/%3E%3Ccircle cx=%22100%22 cy=%2270%22 r=%2235%22 fill=%22%238da5c7%22/%3E%3Cpath d=%22M30 190 Q35 115 100 115 Q165 115 170 190%22 fill=%22%238da5c7%22/%3E%3C/svg%3E';"
+      >
+      <p class="myNote">
+        To use your own image, place a file named <code>myImage01.jpg</code>
+        in the same folder as this HTML file.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    const myB1 = document.getElementById("myB1");
+    const myTextArea = document.getElementById("myTextArea");
+
+    document.getElementById("myChangeButton").onclick = function () {
+      myB1.style.color = "red";
+      myB1.style.backgroundColor = "yellow";
+      myB1.style.borderRadius = "12px";
+      myB1.style.transform = "scale(1.03)";
+    };
+
+    document.getElementById("myResetButton").onclick = function () {
+      myB1.style.color = "#00a000";
+      myB1.style.backgroundColor = "#e8f7ff";
+      myB1.style.borderRadius = "6px";
+      myB1.style.transform = "scale(1)";
+    };
+
+    let myMoveAmount = 0;
+
+    document.getElementById("myMoveLeftButton").onclick = function () {
+      myMoveAmount = Math.max(-100, myMoveAmount - 20);
+      myTextArea.style.transform = "translateX(" + myMoveAmount + "px)";
+    };
+
+    document.getElementById("myMoveRightButton").onclick = function () {
+      myMoveAmount = Math.min(100, myMoveAmount + 20);
+      myTextArea.style.transform = "translateX(" + myMoveAmount + "px)";
+    };
+
+    document.getElementById("myCenterButton").onclick = function () {
+      myMoveAmount = 0;
+      myTextArea.style.transform = "translateX(0)";
+    };
+  </script>
 </body>
-    
-  
-  
-  
+</html>
+'''
+
+path = Path("/mnt/data/T1A04-CSS-by-Ektaj.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created {path.name} ({path.stat().st_size:,} bytes)")
