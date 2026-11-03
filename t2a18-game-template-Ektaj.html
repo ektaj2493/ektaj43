@@ -48,10 +48,12 @@
       overflow: hidden;
     }
 
-    .image-box svg,
-    #movingImage svg {
+    /* Real photographs */
+    .image-box img,
+    #movingImage img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
       display: block;
     }
 
@@ -117,7 +119,7 @@
       animation: moveRightFast 1.2s linear forwards;
     }
 
-    /* New mountain movement */
+    /* Mountain movement */
     @keyframes mountainMove {
       from { transform: translateX(0); }
       to { transform: translateX(150px); }
@@ -140,37 +142,18 @@
 
   <header class="top-area">
 
-    <!-- Mountain image -->
+    <!-- Real mountain photograph -->
     <div class="image-box" id="imageLeft">
-      <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="81" fill="#87CEEB"/>
-        <circle cx="76" cy="17" r="10" fill="#FFD93D"/>
-        <path d="M0 65 L30 20 L65 65 Z" fill="#64748b"/>
-        <path d="M30 20 L43 40 L35 35 L30 43 L23 34 Z" fill="white"/>
-        <path d="M35 65 L68 25 L105 65 Z" fill="#475569"/>
-        <path d="M68 25 L80 40 L70 35 L65 43 L59 35 Z" fill="white"/>
-        <rect y="65" width="100" height="16" fill="#4CAF50"/>
-        <path d="M0 73 Q25 60 50 72 T100 70 V81 H0 Z" fill="#2E8B57"/>
-      </svg>
+      <img
+        src="https://images.prismic.io/goodnature/1ed4db7c-809e-485b-b0df-9704ec001503_snowy-peaks-mountains.jpeg?auto=compress%2Cformat"
+        alt="Snowy mountain landscape">
     </div>
 
-    <!-- Rocket image -->
+    <!-- Real rocket launch photograph -->
     <div class="image-box" id="imageRight">
-      <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="81" fill="#172554"/>
-        <circle cx="15" cy="14" r="2" fill="white"/>
-        <circle cx="80" cy="12" r="2" fill="white"/>
-        <circle cx="87" cy="55" r="2" fill="white"/>
-        <circle cx="20" cy="55" r="2" fill="white"/>
-        <g transform="translate(50 40) rotate(35)">
-          <path d="M0 -28 Q18 -10 14 12 L-14 12 Q-18 -10 0 -28" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
-          <circle cy="-7" r="7" fill="#38bdf8" stroke="#2563eb" stroke-width="2"/>
-          <path d="M-14 5 L-26 20 L-13 17 Z" fill="#ef4444"/>
-          <path d="M14 5 L26 20 L13 17 Z" fill="#ef4444"/>
-          <path d="M-8 12 L0 31 L8 12 Z" fill="#f97316"/>
-          <path d="M-4 15 L0 26 L4 15 Z" fill="#fde047"/>
-        </g>
-      </svg>
+      <img
+        src="https://f7fd61ac87.clvaw-cdnwnd.com/0adf95118fb4fee8ecaafab67a98f61c/200000221-4741547416/T4G-website-001001.jpeg?ph=f7fd61ac87"
+        alt="Space shuttle launching">
     </div>
 
     <h1>t2a18-game-template-Ektaj</h1>
@@ -178,6 +161,7 @@
 
   <!-- FOUR BUTTONS -->
   <div class="buttons">
+
     <button type="button" id="backgroundButton">
       Auto Background Left
     </button>
@@ -190,36 +174,25 @@
       Rocket Reset
     </button>
 
-    <!-- NEW MOUNTAIN BUTTON -->
     <button type="button" id="mountainButton">
       Mountain Move
     </button>
+
   </div>
 
   <main class="play-area" id="playArea">
 
-    <!-- Moving rocket -->
+    <!-- Moving rocket photograph -->
     <div id="movingImage">
-      <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="81" fill="#172554"/>
-        <circle cx="15" cy="14" r="2" fill="white"/>
-        <circle cx="80" cy="12" r="2" fill="white"/>
-        <circle cx="87" cy="55" r="2" fill="white"/>
-        <circle cx="20" cy="55" r="2" fill="white"/>
-        <g transform="translate(50 40) rotate(35)">
-          <path d="M0 -28 Q18 -10 14 12 L-14 12 Q-18 -10 0 -28" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
-          <circle cy="-7" r="7" fill="#38bdf8" stroke="#2563eb" stroke-width="2"/>
-          <path d="M-14 5 L-26 20 L-13 17 Z" fill="#ef4444"/>
-          <path d="M14 5 L26 20 L13 17 Z" fill="#ef4444"/>
-          <path d="M-8 12 L0 31 L8 12 Z" fill="#f97316"/>
-          <path d="M-4 15 L0 26 L4 15 Z" fill="#fde047"/>
-        </g>
-      </svg>
+      <img
+        src="https://f7fd61ac87.clvaw-cdnwnd.com/0adf95118fb4fee8ecaafab67a98f61c/200000221-4741547416/T4G-website-001001.jpeg?ph=f7fd61ac87"
+        alt="Space shuttle launching">
     </div>
 
   </main>
 
   <script>
+
     // Background movement
 
     const myBackgroundButton = document.getElementById('backgroundButton');
@@ -240,6 +213,7 @@
         : 'Auto Background Left';
     });
 
+
     // Rocket movement
 
     const myImageButton = document.getElementById('imageButton');
@@ -251,6 +225,7 @@
       void myMovingImage.offsetWidth;
       myMovingImage.classList.add('fast-right');
     });
+
 
     // Rocket Reset
 
@@ -264,7 +239,8 @@
       myMovingImage.style.animation = '';
     });
 
-    // NEW MOUNTAIN MOVEMENT
+
+    // Mountain movement
 
     const myMountainButton = document.getElementById('mountainButton');
     const myMountainImage = document.getElementById('imageLeft');
@@ -272,10 +248,8 @@
     myMountainButton.addEventListener('click', function () {
       myMountainImage.classList.remove('mountain-move');
 
-      // Restart the mountain animation
       void myMountainImage.offsetWidth;
 
-      // Move the mountain and leave it there
       myMountainImage.classList.add('mountain-move');
     });
 
