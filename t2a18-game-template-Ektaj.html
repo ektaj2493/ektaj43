@@ -90,6 +90,7 @@
       border: 1px solid #c8c8c8;
       background: white;
       overflow: hidden;
+      transform: translateX(0);
     }
 
     .background-moving {
@@ -129,8 +130,8 @@
 
   <header class="top-area">
 
-    <!-- Image 1: Mountain landscape -->
-    <div class="image-box" id="imageLeft" aria-label="Mountain landscape">
+    <!-- Mountain image -->
+    <div class="image-box" id="imageLeft">
       <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="81" fill="#87CEEB"/>
         <circle cx="76" cy="17" r="10" fill="#FFD93D"/>
@@ -143,8 +144,8 @@
       </svg>
     </div>
 
-    <!-- Image 2: Rocket -->
-    <div class="image-box" id="imageRight" aria-label="Cartoon rocket">
+    <!-- Rocket image -->
+    <div class="image-box" id="imageRight">
       <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="81" fill="#172554"/>
         <circle cx="15" cy="14" r="2" fill="white"/>
@@ -183,7 +184,7 @@
   <main class="play-area" id="playArea">
 
     <!-- Moving rocket -->
-    <div id="movingImage" aria-label="Moving rocket">
+    <div id="movingImage">
       <svg viewBox="0 0 100 81" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="81" fill="#172554"/>
         <circle cx="15" cy="14" r="2" fill="white"/>
@@ -204,7 +205,7 @@
   </main>
 
   <script>
-    // Auto Background Left starts and stops the scrolling background.
+    // Background movement
 
     const myBackgroundButton = document.getElementById('backgroundButton');
     const myPlayArea = document.getElementById('playArea');
@@ -224,36 +225,37 @@
         : 'Auto Background Left';
     });
 
-    // Image Right Fast Button sends the rocket quickly to the right.
+    // Rocket movement
 
     const myImageButton = document.getElementById('imageButton');
     const myMovingImage = document.getElementById('movingImage');
+    const myResetButton = document.getElementById('resetButton');
 
     myImageButton.addEventListener('click', function () {
+      // Restart the rocket animation from its current starting point.
       myMovingImage.classList.remove('fast-right');
-
-      // Restart the animation when clicked again.
       void myMovingImage.offsetWidth;
-
       myMovingImage.classList.add('fast-right');
     });
 
-    myMovingImage.addEventListener('animationend', function () {
-      myMovingImage.classList.remove('fast-right');
-    });
+    // Rocket stays at the right after the animation ends.
+    // It does NOT automatically return to the beginning.
 
-    // Rocket Reset sends the rocket back to its starting position.
-
-    const myResetButton = document.getElementById('resetButton');
+    // Rocket Reset ONLY moves the rocket back when clicked.
 
     myResetButton.addEventListener('click', function () {
       myMovingImage.classList.remove('fast-right');
+
+      // Remove the animation and return to the starting position.
+      myMovingImage.style.animation = 'none';
       myMovingImage.style.transform = 'translateX(0)';
+
+      // Prepare the animation for the next button press.
+      void myMovingImage.offsetWidth;
+      myMovingImage.style.animation = '';
     });
 
   </script>
 
 </body>
 </html>
-
-
