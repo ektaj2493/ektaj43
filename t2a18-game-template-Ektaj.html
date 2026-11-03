@@ -48,7 +48,6 @@
       overflow: hidden;
     }
 
-    /* Real photographs */
     .image-box img,
     #movingImage img {
       width: 100%;
@@ -159,7 +158,7 @@
     <h1>t2a18-game-template-Ektaj</h1>
   </header>
 
-  <!-- FOUR BUTTONS -->
+  <!-- FIVE BUTTONS -->
   <div class="buttons">
 
     <button type="button" id="backgroundButton">
@@ -176,6 +175,11 @@
 
     <button type="button" id="mountainButton">
       Mountain Move
+    </button>
+
+    <!-- NEW MOUNTAIN RESET BUTTON -->
+    <button type="button" id="mountainResetButton">
+      Mountain Reset
     </button>
 
   </div>
@@ -253,8 +257,24 @@
       myMountainImage.classList.add('mountain-move');
     });
 
+
+    // Mountain Reset
+
+    const myMountainResetButton = document.getElementById('mountainResetButton');
+
+    myMountainResetButton.addEventListener('click', function () {
+      myMountainImage.classList.remove('mountain-move');
+
+      // Return the mountain to its original position
+      myMountainImage.style.animation = 'none';
+      myMountainImage.style.transform = 'translateX(0)';
+
+      // Prepare for the next mountain movement
+      void myMountainImage.offsetWidth;
+      myMountainImage.style.animation = '';
+    });
+
   </script>
 
 </body>
 </html>
-
