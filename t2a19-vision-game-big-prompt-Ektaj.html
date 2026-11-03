@@ -1,1 +1,792 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline Vision Quest</title>
+<style>
+  body { margin: 0; padding: 18px; font-family: Arial, sans-serif; color: #222; background: #f4f6f8; }
+  h1 { margin: 0 0 8px; text-align: center; }
+  .myIntro { text-align: center; margin: 0 0 18px; }
+  .myLayout { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr); gap: 16px; max-width: 1100px; margin: auto; }
+  .myPanel { background: white; border: 1px solid #cbd2d9; border-radius: 8px; padding: 14px; }
+  h2 { margin: 0 0 12px; font-size: 21px; }
+  h3 { margin: 14px 0 8px; font-size: 16px; }
+  button, select, input { font: inherit; padding: 7px 9px; margin: 3px 2px 3px 0; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: .55; }
+  .myCameraRow { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  video { width: 240px; max-width: 100%; background: #20252b; border: 1px solid #999; transform: scaleX(-1); }
+  #myFeatureCanvas { width: 128px; height: 128px; image-rendering: pixelated; border: 1px solid #777; background: #111; }
+  .mySmall { color: #555; font-size: 13px; }
+  .myTrainingGrid { display: grid; grid-template-columns: repeat(2, minmax(110px, 1fr)); gap: 5px; }
+  .myTrainButton { min-height: 42px; font-weight: bold; }
+  .myNeutral { grid-column: 1 / -1; }
+  .myStats { padding: 8px; background: #eef2f5; border-radius: 5px; margin-top: 8px; }
+  .myPrediction { font-size: 23px; font-weight: bold; margin: 8px 0; }
+  #myGameCanvas { display: block; width: 100%; max-width: 400px; height: auto; border: 1px solid #777; background: #dff1ff; }
+  .myGameControls { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin: 8px 0; }
+  .myGameControls label { font-size: 14px; }
+  .myNotice { min-height: 20px; color: #555; font-size: 13px; }
+  @media (max-width: 720px) { .myLayout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>Offline Vision Quest</h1>
+<p class="myIntro">Train simple hand-movement examples, then use your predictions to guide an explorer to treasure.</p>
+
+<div class="myLayout">
+  <section class="myPanel">
+    <h2>1. Camera Lab &amp; Training</h2>
+
+    <label for="myCameraFacing">Camera:</label>
+    <select id="myCameraFacing">
+      <option value="user">Front / user-facing</option>
+      <option value="environment">Rear / environment-facing</option>
+    </select>
+
+    <div>
+      <button id="myActivateCamera">Activate WebCam</button>
+      <button id="myStopCamera">Stop</button>
+    </div>
+
+    <p class="mySmall">Camera frames are processed in this page. The app does not upload or save pictures.</p>
+
+    <div class="myCameraRow">
+      <div>
+        <h3>Live camera</h3>
+        <video id="myVideo" autoplay muted playsinline></video>
+      </div>
+
+      <div>
+        <h3>16 × 16 features</h3>
+        <canvas id="myFeatureCanvas" width="16" height="16"></canvas>
+        <p class="mySmall">256 grayscale values</p>
+      </div>
+    </div>
+
+    <h3>2. Collect training samples</h3>
+    <p class="mySmall">Allow camera access, hold a button, and perform that movement. Samples are collected continuously while held.</p>
+
+    <div class="myTrainingGrid">
+      <button class="myTrainButton" data-label="UP">Hold UP</button>
+      <button class="myTrainButton" data-label="DOWN">Hold DOWN</button>
+      <button class="myTrainButton" data-label="LEFT">Hold LEFT</button>
+      <button class="myTrainButton" data-label="RIGHT">Hold RIGHT</button>
+      <button class="myTrainButton myNeutral" data-label="NEUTRAL">Hold NEUTRAL</button>
+    </div>
+
+    <div class="myStats">
+      <div>UP: <span id="myCountUP">0</span> · DOWN: <span id="myCountDOWN">0</span></div>
+      <div>LEFT: <span id="myCountLEFT">0</span> · RIGHT: <span id="myCountRIGHT">0</span></div>
+      <div>NEUTRAL: <span id="myCountNEUTRAL">0</span></div>
+      <strong>Total samples: <span id="myTotalSamples">0</span></strong>
+    </div>
+
+    <div>
+      <button id="myClearData">Clear Training Data</button>
+      <button id="mySaveModel">Save Model</button>
+      <button id="myLoadModel">Load Model</button>
+      <input id="myModelFile" type="file" accept="application/json,.json" hidden>
+    </div>
+
+    <p id="myTrainingStatus" class="myNotice" aria-live="polite">Camera is stopped. You can load a saved model at any time.</p>
+  </section>
+
+  <section class="myPanel">
+    <h2>3. Live Prediction &amp; Treasure Game</h2>
+
+    <div class="myStats">
+      <div>Predicted movement:</div>
+      <div id="myPrediction" class="myPrediction">WAITING</div>
+      <div>Confidence: <strong id="myConfidence">0%</strong></div>
+      <div class="mySmall">Predictions use a local k-nearest neighbors classifier (k = 3).</div>
+    </div>
+
+    <h3>Explorer game</h3>
+    <canvas id="myGameCanvas" width="400" height="300" aria-label="Treasure collection game"></canvas>
+
+    <div class="myGameControls">
+      <button id="myStartGame">Start / Resume</button>
+      <button id="myPauseGame">Pause</button>
+      <button id="myResetGame">Reset Game</button>
+    </div>
+
+    <div class="myGameControls">
+      <label for="mySpeedInput">Base movement speed:</label>
+      <input id="mySpeedInput" type="number" min="1" max="8" step="0.5" value="2" style="width:75px">
+      <span>Current: <strong id="myCurrentSpeed">2</strong></span>
+    </div>
+
+    <div class="myStats">
+      Treasures collected: <strong id="myTreasureCount">0 / 3</strong>
+      <div id="myGameStatus" class="myNotice">Press Start / Resume. Use the camera classifier or arrow keys / WASD.</div>
+    </div>
+
+    <p class="mySmall">Keyboard controls: arrow keys or W, A, S, D. Keyboard input works as a fallback when the camera is unavailable.</p>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// ----- Camera and feature extraction -----
+
+const myVideo = document.getElementById("myVideo");
+const myFeatureCanvas = document.getElementById("myFeatureCanvas");
+const myFeatureContext = myFeatureCanvas.getContext("2d", { willReadFrequently: true });
+const myCameraFacing = document.getElementById("myCameraFacing");
+const myTrainingStatus = document.getElementById("myTrainingStatus");
+const myPrediction = document.getElementById("myPrediction");
+const myConfidence = document.getElementById("myConfidence");
+
+const myClasses = ["UP", "DOWN", "LEFT", "RIGHT", "NEUTRAL"];
+
+let myCameraStream = null;
+let myCameraActive = false;
+let myAnimationFrame = 0;
+
+let myTrainingSamples = {
+  UP: [],
+  DOWN: [],
+  LEFT: [],
+  RIGHT: [],
+  NEUTRAL: []
+};
+
+let myActiveTrainingLabel = null;
+let myLastFeatures = null;
+let myLastPrediction = { label: "NEUTRAL", confidence: 0 };
+
+// Draw a mirrored 16x16 frame and convert its pixels to grayscale.
+
+function myExtractFeatures() {
+  if (!myCameraActive || myVideo.readyState < 2 || !myVideo.videoWidth) {
+    return null;
+  }
+
+  myFeatureContext.save();
+  myFeatureContext.clearRect(0, 0, 16, 16);
+
+  myFeatureContext.translate(16, 0);
+  myFeatureContext.scale(-1, 1);
+
+  myFeatureContext.drawImage(myVideo, 0, 0, 16, 16);
+  myFeatureContext.restore();
+
+  const myPixelData = myFeatureContext.getImageData(0, 0, 16, 16).data;
+  const myFeatures = [];
+
+  for (let myIndex = 0; myIndex < myPixelData.length; myIndex += 4) {
+    const myGray = (
+      0.299 * myPixelData[myIndex] +
+      0.587 * myPixelData[myIndex + 1] +
+      0.114 * myPixelData[myIndex + 2]
+    ) / 255;
+
+    myFeatures.push(Number(myGray.toFixed(4)));
+  }
+
+  return myFeatures;
+}
+
+// Start the webcam.
+
+async function myActivateCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    myTrainingStatus.textContent =
+      "Camera access is not available. Try localhost or HTTPS.";
+    return;
+  }
+
+  myStopCamera();
+
+  try {
+    myCameraStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: myCameraFacing.value },
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    });
+
+    myVideo.srcObject = myCameraStream;
+    await myVideo.play();
+
+    myCameraActive = true;
+
+    myTrainingStatus.textContent =
+      "Camera active. Hold a training button to collect samples.";
+
+    myRunVisionLoop();
+
+  } catch (myError) {
+    myTrainingStatus.textContent =
+      "Could not start camera: " + myError.message;
+  }
+}
+
+// Stop the webcam.
+
+function myStopCamera() {
+  myCameraActive = false;
+
+  if (myAnimationFrame) {
+    cancelAnimationFrame(myAnimationFrame);
+  }
+
+  if (myCameraStream) {
+    myCameraStream.getTracks().forEach(function(myTrack) {
+      myTrack.stop();
+    });
+
+    myCameraStream = null;
+  }
+
+  myVideo.srcObject = null;
+  myTrainingStatus.textContent = "Camera stopped.";
+}
+
+// Process camera frames continuously.
+
+function myRunVisionLoop() {
+  if (!myCameraActive) return;
+
+  myLastFeatures = myExtractFeatures();
+
+  if (myLastFeatures) {
+    if (myActiveTrainingLabel) {
+      myTrainingSamples[myActiveTrainingLabel].push(myLastFeatures.slice());
+      myUpdateSampleCounts();
+    }
+
+    myLastPrediction = myPredict(myLastFeatures);
+
+    myPrediction.textContent = myLastPrediction.label;
+
+    myConfidence.textContent =
+      Math.round(myLastPrediction.confidence * 100) + "%";
+  }
+
+  myAnimationFrame = requestAnimationFrame(myRunVisionLoop);
+}
+
+// ----- Training data and k-nearest neighbors classifier -----
+
+function myUpdateSampleCounts() {
+  let myTotal = 0;
+
+  myClasses.forEach(function(myLabel) {
+    const myCount = myTrainingSamples[myLabel].length;
+
+    document.getElementById("myCount" + myLabel).textContent = myCount;
+
+    myTotal += myCount;
+  });
+
+  document.getElementById("myTotalSamples").textContent = myTotal;
+}
+
+// Calculate the distance between two feature arrays.
+
+function myDistance(myFeaturesA, myFeaturesB) {
+  let mySum = 0;
+
+  for (let myIndex = 0; myIndex < 256; myIndex++) {
+    const myDifference = myFeaturesA[myIndex] - myFeaturesB[myIndex];
+    mySum += myDifference * myDifference;
+  }
+
+  return Math.sqrt(mySum / 256);
+}
+
+// Predict the movement using the three closest training samples.
+
+function myPredict(myFeatures) {
+  const myNeighbors = [];
+
+  myClasses.forEach(function(myLabel) {
+    myTrainingSamples[myLabel].forEach(function(mySample) {
+      if (Array.isArray(mySample) && mySample.length === 256) {
+        myNeighbors.push({
+          label: myLabel,
+          distance: myDistance(myFeatures, mySample)
+        });
+      }
+    });
+  });
+
+  if (myNeighbors.length === 0) {
+    return { label: "NO MODEL", confidence: 0 };
+  }
+
+  myNeighbors.sort(function(myA, myB) {
+    return myA.distance - myB.distance;
+  });
+
+  const myTopNeighbors = myNeighbors.slice(
+    0,
+    Math.min(3, myNeighbors.length)
+  );
+
+  const myVotes = {
+    UP: 0,
+    DOWN: 0,
+    LEFT: 0,
+    RIGHT: 0,
+    NEUTRAL: 0
+  };
+
+  myTopNeighbors.forEach(function(myNeighbor) {
+    myVotes[myNeighbor.label] += 1;
+  });
+
+  let myBestLabel = "NEUTRAL";
+
+  myClasses.forEach(function(myLabel) {
+    if (myVotes[myLabel] > myVotes[myBestLabel]) {
+      myBestLabel = myLabel;
+    }
+  });
+
+  return {
+    label: myBestLabel,
+    confidence: myVotes[myBestLabel] / myTopNeighbors.length
+  };
+}
+
+// Stop collecting samples when the pointer is released.
+
+function myStopTraining() {
+  myActiveTrainingLabel = null;
+}
+
+// Training buttons use pointer events.
+
+document.querySelectorAll(".myTrainButton").forEach(function(myButton) {
+
+  myButton.addEventListener("pointerdown", function(myEvent) {
+    myEvent.preventDefault();
+
+    if (!myCameraActive) {
+      myTrainingStatus.textContent =
+        "Activate the webcam before collecting training samples.";
+      return;
+    }
+
+    myActiveTrainingLabel = myButton.dataset.label;
+
+    myTrainingStatus.textContent =
+      "Collecting " + myActiveTrainingLabel + " samples. Keep holding...";
+
+    myButton.setPointerCapture(myEvent.pointerId);
+  });
+
+  myButton.addEventListener("pointerup", myStopTraining);
+  myButton.addEventListener("pointerleave", myStopTraining);
+  myButton.addEventListener("pointercancel", myStopTraining);
+});
+
+// Clear all training samples.
+
+document.getElementById("myClearData").addEventListener("click", function() {
+  myClasses.forEach(function(myLabel) {
+    myTrainingSamples[myLabel] = [];
+  });
+
+  myUpdateSampleCounts();
+
+  myPrediction.textContent = "WAITING";
+  myConfidence.textContent = "0%";
+
+  myTrainingStatus.textContent = "All training samples cleared.";
+});
+
+// Save the model as a JSON file.
+
+document.getElementById("mySaveModel").addEventListener("click", function() {
+  const myModelData = {
+    app: "Offline Vision Quest",
+    version: 1,
+    samples: myTrainingSamples
+  };
+
+  const myBlob = new Blob(
+    [JSON.stringify(myModelData)],
+    { type: "application/json" }
+  );
+
+  const myUrl = URL.createObjectURL(myBlob);
+  const myLink = document.createElement("a");
+
+  myLink.href = myUrl;
+  myLink.download = "offline-vision-quest-model.json";
+  myLink.click();
+
+  URL.revokeObjectURL(myUrl);
+
+  myTrainingStatus.textContent =
+    "Model JSON exported. Only feature arrays and labels are included.";
+});
+
+// Open the file picker to load a model.
+
+document.getElementById("myLoadModel").addEventListener("click", function() {
+  document.getElementById("myModelFile").click();
+});
+
+// Read and validate the selected JSON model.
+
+document.getElementById("myModelFile").addEventListener("change", async function(myEvent) {
+  const myFile = myEvent.target.files[0];
+
+  if (!myFile) return;
+
+  try {
+    const myLoadedModel = JSON.parse(await myFile.text());
+    const myLoadedSamples = myLoadedModel.samples || myLoadedModel;
+
+    const myValidatedSamples = {
+      UP: [],
+      DOWN: [],
+      LEFT: [],
+      RIGHT: [],
+      NEUTRAL: []
+    };
+
+    myClasses.forEach(function(myLabel) {
+      const myRows = Array.isArray(myLoadedSamples[myLabel])
+        ? myLoadedSamples[myLabel]
+        : [];
+
+      myValidatedSamples[myLabel] = myRows.filter(function(mySample) {
+        return Array.isArray(mySample) &&
+          mySample.length === 256 &&
+          mySample.every(function(myValue) {
+            return Number.isFinite(myValue) &&
+              myValue >= 0 &&
+              myValue <= 1;
+          });
+      });
+    });
+
+    myTrainingSamples = myValidatedSamples;
+    myUpdateSampleCounts();
+
+    myTrainingStatus.textContent = "Model loaded successfully.";
+
+  } catch (myError) {
+    myTrainingStatus.textContent =
+      "Could not load model JSON: " + myError.message;
+  }
+
+  myEvent.target.value = "";
+});
+
+// ----- Treasure collection game -----
+
+const myGameCanvas = document.getElementById("myGameCanvas");
+const myGameContext = myGameCanvas.getContext("2d");
+
+const myGameStatus = document.getElementById("myGameStatus");
+const mySpeedInput = document.getElementById("mySpeedInput");
+const myCurrentSpeed = document.getElementById("myCurrentSpeed");
+const myTreasureCount = document.getElementById("myTreasureCount");
+
+const myKeysDown = {};
+
+let myPlayer = {
+  x: 185,
+  y: 135,
+  size: 22
+};
+
+let myTreasures = [];
+let myCollectedTreasures = 0;
+let myGameRunning = false;
+let myGameLoopId = 0;
+let myGameWon = false;
+
+// Randomly place three treasures.
+
+function myPlaceTreasures() {
+  myTreasures = [];
+
+  for (let myIndex = 0; myIndex < 3; myIndex++) {
+    myTreasures.push({
+      x: 25 + Math.random() * 345,
+      y: 25 + Math.random() * 245,
+      size: 15,
+      collected: false
+    });
+  }
+}
+
+// Draw the game canvas.
+
+function myDrawGame() {
+  myGameContext.clearRect(0, 0, 400, 300);
+
+  myGameContext.fillStyle = "#dff1ff";
+  myGameContext.fillRect(0, 0, 400, 300);
+
+  myGameContext.fillStyle = "#c6e3b1";
+  myGameContext.fillRect(0, 260, 400, 40);
+
+  myGameContext.strokeStyle = "#b4d1e3";
+  myGameContext.lineWidth = 1;
+
+  for (let myX = 0; myX < 400; myX += 40) {
+    myGameContext.beginPath();
+    myGameContext.moveTo(myX, 0);
+    myGameContext.lineTo(myX, 300);
+    myGameContext.stroke();
+  }
+
+  myGameContext.font = "23px Arial";
+
+  myTreasures.forEach(function(myTreasure) {
+    if (!myTreasure.collected) {
+      myGameContext.fillText(
+        "💎",
+        myTreasure.x - 12,
+        myTreasure.y + 9
+      );
+    }
+  });
+
+  myGameContext.fillStyle = "#2767a8";
+  myGameContext.fillRect(
+    myPlayer.x,
+    myPlayer.y,
+    myPlayer.size,
+    myPlayer.size
+  );
+
+  myGameContext.font = "19px Arial";
+  myGameContext.fillText(
+    "🧭",
+    myPlayer.x - 1,
+    myPlayer.y + 19
+  );
+
+  myGameContext.fillStyle = "#24313b";
+  myGameContext.font = "12px Arial";
+  myGameContext.fillText("Find all 3 treasures!", 10, 18);
+}
+
+// Reset the game.
+
+function myResetGame() {
+  myGameRunning = false;
+
+  if (myGameLoopId) {
+    cancelAnimationFrame(myGameLoopId);
+  }
+
+  myPlayer = {
+    x: 185,
+    y: 135,
+    size: 22
+  };
+
+  myCollectedTreasures = 0;
+  myGameWon = false;
+
+  myPlaceTreasures();
+
+  myTreasureCount.textContent = "0 / 3";
+
+  myGameStatus.textContent =
+    "Game reset. Press Start / Resume to play.";
+
+  myDrawGame();
+}
+
+// Main game loop.
+
+function myGameStep() {
+  if (!myGameRunning) return;
+
+  let myMoveX = 0;
+  let myMoveY = 0;
+
+  const myKeyboardUsed =
+    myKeysDown.ArrowUp ||
+    myKeysDown.ArrowDown ||
+    myKeysDown.ArrowLeft ||
+    myKeysDown.ArrowRight ||
+    myKeysDown.w ||
+    myKeysDown.a ||
+    myKeysDown.s ||
+    myKeysDown.d;
+
+  // Keyboard controls take priority.
+
+  if (myKeyboardUsed) {
+    if (myKeysDown.ArrowUp || myKeysDown.w) myMoveY -= 1;
+    if (myKeysDown.ArrowDown || myKeysDown.s) myMoveY += 1;
+    if (myKeysDown.ArrowLeft || myKeysDown.a) myMoveX -= 1;
+    if (myKeysDown.ArrowRight || myKeysDown.d) myMoveX += 1;
+  }
+
+  // Otherwise use the camera prediction.
+
+  else if (myLastPrediction.confidence >= 0.34) {
+    if (myLastPrediction.label === "UP") myMoveY = -1;
+    if (myLastPrediction.label === "DOWN") myMoveY = 1;
+    if (myLastPrediction.label === "LEFT") myMoveX = -1;
+    if (myLastPrediction.label === "RIGHT") myMoveX = 1;
+  }
+
+  const mySpeed = Math.min(
+    8,
+    Math.max(1, Number(mySpeedInput.value) || 2)
+  );
+
+  myCurrentSpeed.textContent = mySpeed.toString();
+
+  myPlayer.x = Math.max(
+    0,
+    Math.min(400 - myPlayer.size, myPlayer.x + myMoveX * mySpeed)
+  );
+
+  myPlayer.y = Math.max(
+    0,
+    Math.min(300 - myPlayer.size, myPlayer.y + myMoveY * mySpeed)
+  );
+
+  // Check whether the player collected a treasure.
+
+  myTreasures.forEach(function(myTreasure) {
+    if (!myTreasure.collected) {
+      const myDistanceX =
+        (myPlayer.x + myPlayer.size / 2) - myTreasure.x;
+
+      const myDistanceY =
+        (myPlayer.y + myPlayer.size / 2) - myTreasure.y;
+
+      if (Math.hypot(myDistanceX, myDistanceY) < 25) {
+        myTreasure.collected = true;
+        myCollectedTreasures++;
+
+        myTreasureCount.textContent =
+          myCollectedTreasures + " / 3";
+      }
+    }
+  });
+
+  if (myCollectedTreasures === 3) {
+    myGameRunning = false;
+    myGameWon = true;
+
+    myGameStatus.textContent =
+      "You found all the treasure! Press Reset Game to play again.";
+  }
+
+  myDrawGame();
+
+  if (myGameRunning) {
+    myGameLoopId = requestAnimationFrame(myGameStep);
+  }
+}
+
+// Start or resume the game.
+
+document.getElementById("myStartGame").addEventListener("click", function() {
+  if (myGameWon) return;
+
+  if (!myGameRunning) {
+    myGameRunning = true;
+
+    myGameStatus.textContent =
+      "Game running. Move with the camera or keyboard.";
+
+    myGameLoopId = requestAnimationFrame(myGameStep);
+  }
+});
+
+// Pause the game.
+
+document.getElementById("myPauseGame").addEventListener("click", function() {
+  myGameRunning = false;
+
+  if (myGameLoopId) {
+    cancelAnimationFrame(myGameLoopId);
+  }
+
+  myGameStatus.textContent = "Game paused.";
+});
+
+// Reset button.
+
+document.getElementById("myResetGame").addEventListener(
+  "click",
+  myResetGame
+);
+
+// Keyboard controls.
+
+document.addEventListener("keydown", function(myEvent) {
+  const myKey = myEvent.key.length === 1
+    ? myEvent.key.toLowerCase()
+    : myEvent.key;
+
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(myKey)) {
+    myEvent.preventDefault();
+  }
+
+  myKeysDown[myKey] = true;
+});
+
+document.addEventListener("keyup", function(myEvent) {
+  const myKey = myEvent.key.length === 1
+    ? myEvent.key.toLowerCase()
+    : myEvent.key;
+
+  myKeysDown[myKey] = false;
+});
+
+window.addEventListener("blur", function() {
+  Object.keys(myKeysDown).forEach(function(myKey) {
+    myKeysDown[myKey] = false;
+  });
+});
+
+// Update the movement speed.
+
+mySpeedInput.addEventListener("change", function() {
+  const mySpeed = Math.min(
+    8,
+    Math.max(1, Number(mySpeedInput.value) || 2)
+  );
+
+  mySpeedInput.value = mySpeed;
+  myCurrentSpeed.textContent = mySpeed.toString();
+});
+
+// Connect the camera buttons.
+
+document.getElementById("myActivateCamera").addEventListener(
+  "click",
+  myActivateCamera
+);
+
+document.getElementById("myStopCamera").addEventListener(
+  "click",
+  myStopCamera
+);
+
+// Initialize the page.
+
+myPlaceTreasures();
+myUpdateSampleCounts();
+myDrawGame();
+
+</script>
+</body>
+</html>
