@@ -1,1 +1,159 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>t2a18-game-template-fred</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+    .top-area {
+      position: relative;
+      height: 130px;
+      border-top: 1px solid #ddd;
+      overflow: hidden;
+    }
+    h1 {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      white-space: nowrap;
+      font-family: "Times New Roman", serif;
+      font-size: 30px;
+      color: black;
+    }
+    .image-box {
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 81px;
+      border: 1px solid #c8c8c8;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: #777;
+      font-size: 12px;
+    }
+    #imageLeft { left: 38px; }
+    #imageRight { left: 238px; }
+    .buttons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding-top: 9px;
+    }
+    button {
+      font: 13px Arial, sans-serif;
+      padding: 2px 6px;
+      color: black;
+      cursor: pointer;
+    }
+    .play-area {
+      position: relative;
+      height: 360px;
+      margin-top: 18px;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #fff 0%, #fff 72%, #f5f5f5 100%);
+    }
+    #movingImage {
+      position: absolute;
+      left: 238px;
+      top: 25px;
+      width: 100px;
+      height: 81px;
+      border: 1px solid #c8c8c8;
+      background: white;
+      display: grid;
+      place-items: center;
+      color: #777;
+      font-size: 12px;
+    }
+    .background-moving {
+      background-image: repeating-linear-gradient(
+        90deg,
+        transparent 0px, transparent 59px,
+        rgba(0,0,0,.035) 60px, transparent 61px
+      );
+      background-size: 120px 100%;
+    }
+    @keyframes moveBackground {
+      from { background-position: 0 0; }
+      to { background-position: -1200px 0; }
+    }
+    .background-moving { animation: moveBackground 5s linear infinite; }
+    @keyframes moveRightFast {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(100vw + 150px)); }
+    }
+    .fast-right { animation: moveRightFast 1.2s linear forwards; }
+    @media (max-width: 600px) {
+      h1 { font-size: 22px; }
+      #imageLeft { left: 12px; }
+      #imageRight { left: 132px; }
+      #movingImage { left: 132px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-area">
+    <div class="image-box" id="imageLeft" aria-label="First image placeholder">Image 1</div>
+    <div class="image-box" id="imageRight" aria-label="Second image placeholder">Image 2</div>
+    <h1>t2a18-game-template-fred</h1>
+  </header>
+
+  <div class="buttons">
+    <button type="button" id="backgroundButton">Auto Background Left</button>
+    <button type="button" id="imageButton">Image Right Fast Button</button>
+  </div>
+
+  <main class="play-area" id="playArea">
+    <div id="movingImage">Image 2</div>
+  </main>
+
+  <script>
+    // Auto Background Left starts and stops the scrolling background.
+    const myBackgroundButton = document.getElementById('backgroundButton');
+    const myPlayArea = document.getElementById('playArea');
+    let myBackgroundIsMoving = false;
+
+    myBackgroundButton.addEventListener('click', function () {
+      myBackgroundIsMoving = !myBackgroundIsMoving;
+      myPlayArea.classList.toggle('background-moving', myBackgroundIsMoving);
+      myBackgroundButton.textContent = myBackgroundIsMoving
+        ? 'Stop Background'
+        : 'Auto Background Left';
+    });
+
+    // Image Right Fast Button sends the image quickly to the right.
+    const myImageButton = document.getElementById('imageButton');
+    const myMovingImage = document.getElementById('movingImage');
+
+    myImageButton.addEventListener('click', function () {
+      myMovingImage.classList.remove('fast-right');
+      // Restart the animation when the button is clicked again.
+      void myMovingImage.offsetWidth;
+      myMovingImage.classList.add('fast-right');
+    });
+
+    myMovingImage.addEventListener('animationend', function () {
+      myMovingImage.classList.remove('fast-right');
+    });
+  </script>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/t2a18-game-template-fred.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created: {path}")
 
