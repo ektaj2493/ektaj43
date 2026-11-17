@@ -1,1 +1,627 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>t2a20-sort-fred.html</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172554;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: "Times New Roman", serif;
+      color: #172554;
+    }
+
+    h2 {
+      color: #1d4ed8;
+    }
+
+    .sort-section {
+      max-width: 850px;
+      margin: 25px auto;
+      padding: 22px;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .description {
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    button {
+      padding: 9px 14px;
+      margin: 5px 3px;
+      border: 1px solid #64748b;
+      border-radius: 5px;
+      background: #e2e8f0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #bfdbfe;
+    }
+
+    input {
+      padding: 9px;
+      margin: 5px;
+      border: 1px solid #94a3b8;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+
+    .output {
+      min-height: 65px;
+      margin-top: 15px;
+      padding: 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      background: #f8fafc;
+      overflow-wrap: anywhere;
+      line-height: 1.8;
+    }
+
+    .letter {
+      display: inline-block;
+      min-width: 32px;
+      padding: 7px;
+      margin: 3px;
+      text-align: center;
+      font-weight: bold;
+      color: #1e3a8a;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+      border-radius: 5px;
+    }
+
+    .sorted .letter {
+      color: #166534;
+      background: #dcfce7;
+      border-color: #86efac;
+    }
+
+    .controls {
+      margin-top: 12px;
+    }
+
+    .status {
+      color: #475569;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .seed-controls {
+      margin: 15px 0;
+    }
+
+    hr {
+      max-width: 850px;
+      margin: 35px auto;
+      border: none;
+      border-top: 2px solid #cbd5e1;
+    }
+
+    code {
+      background: #e2e8f0;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>t2a20-sort-fred.html</h1>
+
+  <!-- ================================= -->
+  <!-- PART 1: MANUAL ALPHABET SORTER -->
+  <!-- ================================= -->
+
+  <section class="sort-section">
+
+    <h2>Part 1: Manual Alphabet Sort</h2>
+
+    <p class="description">
+      This section uses a bubble sort algorithm written by hand.
+      It compares two letters at a time and swaps them when
+      they are in the wrong alphabetical order.
+    </p>
+
+    <div class="controls">
+      <button type="button" id="myManualRandom">
+        Set Random
+      </button>
+
+      <button type="button" id="myManualShow">
+        Show
+      </button>
+
+      <button type="button" id="myManualSort">
+        Sort
+      </button>
+
+      <button type="button" id="myManualReset">
+        Reset
+      </button>
+    </div>
+
+    <p><strong>Letters:</strong></p>
+
+    <div class="output" id="myManualOutput">
+      Press Show to display the alphabet.
+    </div>
+
+    <p class="status" id="myManualStatus">
+      Ready to sort.
+    </p>
+
+  </section>
+
+
+  <hr>
+
+
+  <!-- ================================= -->
+  <!-- PART 2: SEEDED ALPHABET SORTER -->
+  <!-- ================================= -->
+
+  <section class="sort-section">
+
+    <h2>Part 2: Seeded Random Alphabet Sort</h2>
+
+    <p class="description">
+      This improved version uses a seed to generate a repeatable
+      random arrangement of letters. Using the same seed creates
+      the same arrangement every time.
+    </p>
+
+    <div class="seed-controls">
+
+      <label for="mySeed">Random Seed:</label>
+
+      <input
+        type="text"
+        id="mySeed"
+        value="12345"
+        placeholder="Enter a seed"
+      >
+
+      <br>
+
+      <label for="myLetterCount">Number of Letters:</label>
+
+      <input
+        type="number"
+        id="myLetterCount"
+        value="26"
+        min="1"
+        max="26"
+      >
+
+    </div>
+
+    <div class="controls">
+
+      <button type="button" id="mySeedGenerate">
+        Generate from Seed
+      </button>
+
+      <button type="button" id="mySeedShow">
+        Show
+      </button>
+
+      <button type="button" id="mySeedSort">
+        Sort
+      </button>
+
+      <button type="button" id="mySeedRandom">
+        New Random Seed
+      </button>
+
+    </div>
+
+    <p><strong>Seeded Letters:</strong></p>
+
+    <div class="output" id="mySeedOutput">
+      Enter a seed and press Generate from Seed.
+    </div>
+
+    <p class="status" id="mySeedStatus">
+      Waiting for a seed.
+    </p>
+
+  </section>
+
+
+  <script>
+
+    // =================================
+    // PART 1: MANUAL ALPHABET SORTER
+    // =================================
+
+    const myAlphabet = [
+      'A', 'B', 'C', 'D', 'E', 'F',
+      'G', 'H', 'I', 'J', 'K', 'L',
+      'M', 'N', 'O', 'P', 'Q', 'R',
+      'S', 'T', 'U', 'V', 'W', 'X',
+      'Y', 'Z'
+    ];
+
+    let myManualLetters = myAlphabet.slice();
+
+    const myManualOutput = document.getElementById('myManualOutput');
+    const myManualStatus = document.getElementById('myManualStatus');
+
+    const myManualRandom = document.getElementById('myManualRandom');
+    const myManualShow = document.getElementById('myManualShow');
+    const myManualSort = document.getElementById('myManualSort');
+    const myManualReset = document.getElementById('myManualReset');
+
+
+    // Display the manual letters
+
+    function myShowManualLetters() {
+
+      myManualOutput.innerHTML = '';
+
+      myManualLetters.forEach(function(myLetter, myIndex) {
+
+        const mySpan = document.createElement('span');
+
+        mySpan.className = 'letter';
+        mySpan.textContent = myLetter;
+
+        myManualOutput.appendChild(mySpan);
+
+      });
+
+    }
+
+
+    // Randomly shuffle the letters
+
+    function myShuffleManualLetters() {
+
+      for (let myI = myManualLetters.length - 1; myI > 0; myI--) {
+
+        const myJ = Math.floor(Math.random() * (myI + 1));
+
+        const myTemp = myManualLetters[myI];
+
+        myManualLetters[myI] = myManualLetters[myJ];
+
+        myManualLetters[myJ] = myTemp;
+
+      }
+
+    }
+
+
+    // Manual bubble sort algorithm
+
+    function mySortManualLetters() {
+
+      let mySwapped = true;
+      let myPasses = 0;
+
+      while (mySwapped) {
+
+        mySwapped = false;
+        myPasses++;
+
+        for (let myI = 0; myI < myManualLetters.length - myPasses; myI++) {
+
+          if (myManualLetters[myI] > myManualLetters[myI + 1]) {
+
+            // Swap the two letters
+
+            const myTemp = myManualLetters[myI];
+
+            myManualLetters[myI] = myManualLetters[myI + 1];
+
+            myManualLetters[myI + 1] = myTemp;
+
+            mySwapped = true;
+
+          }
+
+        }
+
+      }
+
+      myShowManualLetters();
+
+      myManualOutput.classList.add('sorted');
+
+      myManualStatus.textContent =
+        'Finished! The alphabet is now in alphabetical order.';
+
+    }
+
+
+    // Manual button events
+
+    myManualRandom.onclick = function() {
+
+      myShuffleManualLetters();
+
+      myManualOutput.classList.remove('sorted');
+
+      myShowManualLetters();
+
+      myManualStatus.textContent = 'Letters randomly shuffled.';
+
+    };
+
+
+    myManualShow.onclick = function() {
+
+      myShowManualLetters();
+
+      myManualStatus.textContent = 'Showing current letters.';
+
+    };
+
+
+    myManualSort.onclick = function() {
+
+      mySortManualLetters();
+
+    };
+
+
+    myManualReset.onclick = function() {
+
+      myManualLetters = myAlphabet.slice();
+
+      myManualOutput.classList.remove('sorted');
+
+      myShowManualLetters();
+
+      myManualStatus.textContent = 'Alphabet reset to A through Z.';
+
+    };
+
+
+    // =================================
+    // PART 2: SEEDED RANDOM SORTER
+    // =================================
+
+    const mySeedInput = document.getElementById('mySeed');
+    const myLetterCountInput = document.getElementById('myLetterCount');
+
+    const mySeedOutput = document.getElementById('mySeedOutput');
+    const mySeedStatus = document.getElementById('mySeedStatus');
+
+    const mySeedGenerate = document.getElementById('mySeedGenerate');
+    const mySeedShow = document.getElementById('mySeedShow');
+    const mySeedSort = document.getElementById('mySeedSort');
+    const mySeedRandom = document.getElementById('mySeedRandom');
+
+    let mySeedLetters = [];
+
+
+    // Create a repeatable random number generator from a seed
+
+    function myCreateSeededRandom(mySeedText) {
+
+      let mySeed = 0;
+
+      for (let myI = 0; myI < mySeedText.length; myI++) {
+
+        mySeed = (mySeed * 31 + mySeedText.charCodeAt(myI)) >>> 0;
+
+      }
+
+      if (mySeed === 0) {
+        mySeed = 1;
+      }
+
+      return function() {
+
+        mySeed = (mySeed + 0x6D2B79F5) | 0;
+
+        let myValue = mySeed;
+
+        myValue = Math.imul(myValue ^ (myValue >>> 15), myValue | 1);
+
+        myValue ^= myValue + Math.imul(myValue ^ (myValue >>> 7), myValue | 61);
+
+        return ((myValue ^ (myValue >>> 14)) >>> 0) / 4294967296;
+
+      };
+
+    }
+
+
+    // Generate a shuffled alphabet using the seed
+
+    function myGenerateSeededLetters() {
+
+      const mySeedText = mySeedInput.value.trim();
+
+      if (mySeedText === '') {
+
+        mySeedStatus.textContent = 'Please enter a seed first.';
+
+        return;
+
+      }
+
+      let myCount = Number(myLetterCountInput.value);
+
+      if (!Number.isFinite(myCount)) {
+        myCount = 26;
+      }
+
+      myCount = Math.max(1, Math.min(26, Math.floor(myCount)));
+
+      myLetterCountInput.value = myCount;
+
+      const myRandom = myCreateSeededRandom(mySeedText);
+
+      mySeedLetters = myAlphabet.slice(0, myCount);
+
+      // Fisher-Yates shuffle using seeded random numbers
+
+      for (let myI = mySeedLetters.length - 1; myI > 0; myI--) {
+
+        const myJ = Math.floor(myRandom() * (myI + 1));
+
+        const myTemp = mySeedLetters[myI];
+
+        mySeedLetters[myI] = mySeedLetters[myJ];
+
+        mySeedLetters[myJ] = myTemp;
+
+      }
+
+      mySeedOutput.classList.remove('sorted');
+
+      myShowSeedLetters();
+
+      mySeedStatus.textContent =
+        'Generated ' + myCount + ' letters using seed: ' + mySeedText;
+
+    }
+
+
+    // Display seeded letters
+
+    function myShowSeedLetters() {
+
+      mySeedOutput.innerHTML = '';
+
+      mySeedLetters.forEach(function(myLetter) {
+
+        const mySpan = document.createElement('span');
+
+        mySpan.className = 'letter';
+
+        mySpan.textContent = myLetter;
+
+        mySeedOutput.appendChild(mySpan);
+
+      });
+
+    }
+
+
+    // Sort seeded letters manually with bubble sort
+
+    function mySortSeedLetters() {
+
+      if (mySeedLetters.length === 0) {
+
+        mySeedStatus.textContent =
+          'Generate some letters before sorting.';
+
+        return;
+
+      }
+
+      let mySwapped = true;
+
+      while (mySwapped) {
+
+        mySwapped = false;
+
+        for (let myI = 0; myI < mySeedLetters.length - 1; myI++) {
+
+          if (mySeedLetters[myI] > mySeedLetters[myI + 1]) {
+
+            const myTemp = mySeedLetters[myI];
+
+            mySeedLetters[myI] = mySeedLetters[myI + 1];
+
+            mySeedLetters[myI + 1] = myTemp;
+
+            mySwapped = true;
+
+          }
+
+        }
+
+      }
+
+      myShowSeedLetters();
+
+      mySeedOutput.classList.add('sorted');
+
+      mySeedStatus.textContent =
+        'Finished! Seeded letters sorted alphabetically.';
+
+    }
+
+
+    // Seeded sorter button events
+
+    mySeedGenerate.onclick = function() {
+
+      myGenerateSeededLetters();
+
+    };
+
+
+    mySeedShow.onclick = function() {
+
+      if (mySeedLetters.length === 0) {
+
+        mySeedStatus.textContent =
+          'Generate letters before displaying them.';
+
+        return;
+
+      }
+
+      myShowSeedLetters();
+
+      mySeedStatus.textContent = 'Showing current seeded letters.';
+
+    };
+
+
+    mySeedSort.onclick = function() {
+
+      mySortSeedLetters();
+
+    };
+
+
+    mySeedRandom.onclick = function() {
+
+      mySeedInput.value = Math.floor(Math.random() * 1000000000);
+
+      myGenerateSeededLetters();
+
+    };
+
+
+    // Show the original alphabet when the page opens
+
+    myShowManualLetters();
+
+    // Generate the first seeded arrangement
+
+    myGenerateSeededLetters();
+
+  </script>
+
+</body>
+</html>
+
