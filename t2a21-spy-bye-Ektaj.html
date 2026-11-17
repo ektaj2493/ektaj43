@@ -1,1 +1,182 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>t2a21-spy-by-fred.html</title>
+</head>
+
+<body>
+
+<h1>t2a21-spy-by-fred.html</h1>
+
+<h2>Simple Encryption - Caesar Cipher</h2>
+
+<textarea id="myText1" rows="4" cols="60">Hello how are you</textarea>
+<br>
+<button onclick="myEncrypt()">Encrypt</button>
+
+<br><br>
+
+<textarea id="myText2" rows="4" cols="60"></textarea>
+<br>
+<button onclick="myDecrypt()">Decrypt</button>
+
+<br><br>
+
+<textarea id="myText3" rows="4" cols="60"></textarea>
+
+
+<h2>Advanced Encryption - Vigenere Cipher</h2>
+
+Secret Key:
+<input id="myKey" value="SECRET">
+
+<br><br>
+
+<textarea id="myText4" rows="4" cols="60">Hello how are you</textarea>
+<br>
+<button onclick="myAdvancedEncrypt()">Encrypt</button>
+
+<br><br>
+
+<textarea id="myText5" rows="4" cols="60"></textarea>
+<br>
+<button onclick="myAdvancedDecrypt()">Decrypt</button>
+
+<br><br>
+
+<textarea id="myText6" rows="4" cols="60"></textarea>
+
+
+<script>
+
+// SIMPLE ENCRYPTION
+
+function myEncrypt() {
+  let myText = document.getElementById("myText1").value;
+  let myAnswer = "";
+
+  for (let myI = 0; myI < myText.length; myI++) {
+    let myCode = myText.charCodeAt(myI);
+
+    if (myCode >= 65 && myCode <= 90) {
+      myAnswer += String.fromCharCode((myCode - 65 + 3) % 26 + 65);
+    }
+    else if (myCode >= 97 && myCode <= 122) {
+      myAnswer += String.fromCharCode((myCode - 97 + 3) % 26 + 97);
+    }
+    else {
+      myAnswer += myText[myI];
+    }
+  }
+
+  document.getElementById("myText2").value = myAnswer;
+}
+
+
+// SIMPLE DECRYPTION
+
+function myDecrypt() {
+  let myText = document.getElementById("myText2").value;
+  let myAnswer = "";
+
+  for (let myI = 0; myI < myText.length; myI++) {
+    let myCode = myText.charCodeAt(myI);
+
+    if (myCode >= 65 && myCode <= 90) {
+      myAnswer += String.fromCharCode((myCode - 65 + 23) % 26 + 65);
+    }
+    else if (myCode >= 97 && myCode <= 122) {
+      myAnswer += String.fromCharCode((myCode - 97 + 23) % 26 + 97);
+    }
+    else {
+      myAnswer += myText[myI];
+    }
+  }
+
+  document.getElementById("myText3").value = myAnswer;
+}
+
+
+// ADVANCED ENCRYPTION - VIGENERE
+
+function myAdvancedEncrypt() {
+  let myText = document.getElementById("myText4").value;
+  let myKey = document.getElementById("myKey").value.toUpperCase();
+  let myAnswer = "";
+  let myPosition = 0;
+
+  if (!/^[A-Z]+$/.test(myKey)) {
+    alert("Use a key containing letters A-Z only.");
+    return;
+  }
+
+  for (let myI = 0; myI < myText.length; myI++) {
+    let myCode = myText.charCodeAt(myI);
+
+    if ((myCode >= 65 && myCode <= 90) ||
+        (myCode >= 97 && myCode <= 122)) {
+
+      let myShift = myKey.charCodeAt(myPosition % myKey.length) - 65;
+
+      if (myCode >= 65 && myCode <= 90) {
+        myAnswer += String.fromCharCode((myCode - 65 + myShift) % 26 + 65);
+      }
+      else {
+        myAnswer += String.fromCharCode((myCode - 97 + myShift) % 26 + 97);
+      }
+
+      myPosition++;
+    }
+    else {
+      myAnswer += myText[myI];
+    }
+  }
+
+  document.getElementById("myText5").value = myAnswer;
+}
+
+
+// ADVANCED DECRYPTION - VIGENERE
+
+function myAdvancedDecrypt() {
+  let myText = document.getElementById("myText5").value;
+  let myKey = document.getElementById("myKey").value.toUpperCase();
+  let myAnswer = "";
+  let myPosition = 0;
+
+  if (!/^[A-Z]+$/.test(myKey)) {
+    alert("Use a key containing letters A-Z only.");
+    return;
+  }
+
+  for (let myI = 0; myI < myText.length; myI++) {
+    let myCode = myText.charCodeAt(myI);
+
+    if ((myCode >= 65 && myCode <= 90) ||
+        (myCode >= 97 && myCode <= 122)) {
+
+      let myShift = myKey.charCodeAt(myPosition % myKey.length) - 65;
+
+      if (myCode >= 65 && myCode <= 90) {
+        myAnswer += String.fromCharCode((myCode - 65 - myShift + 26) % 26 + 65);
+      }
+      else {
+        myAnswer += String.fromCharCode((myCode - 97 - myShift + 26) % 26 + 97);
+      }
+
+      myPosition++;
+    }
+    else {
+      myAnswer += myText[myI];
+    }
+  }
+
+  document.getElementById("myText6").value = myAnswer;
+}
+
+</script>
+
+</body>
+</html>
+
