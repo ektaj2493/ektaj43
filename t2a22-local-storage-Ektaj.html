@@ -1,1 +1,107 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>t2a22-local-storage-fred.html</title>
+</head>
+
+<body>
+
+<h1>My To-Do List</h1>
+
+<p>Enter a task:</p>
+
+<input id="myTask" placeholder="Write a task here">
+
+<button onclick="myAddTask()">Add Task</button>
+
+<h2>My Tasks</h2>
+
+<div id="myList"></div>
+
+<script>
+
+// Get saved tasks from local storage
+
+let myTasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+
+
+// Save tasks to the computer
+
+function mySaveTasks() {
+  localStorage.setItem("myTasks", JSON.stringify(myTasks));
+}
+
+
+// Show all tasks
+
+function myShowTasks() {
+  let myOutput = document.getElementById("myList");
+  myOutput.innerHTML = "";
+
+  for (let myI = 0; myI < myTasks.length; myI++) {
+
+    let myText = document.createElement("p");
+
+    myText.textContent = myTasks[myI].name;
+
+    if (myTasks[myI].done) {
+      myText.style.textDecoration = "line-through";
+    }
+
+    let myComplete = document.createElement("button");
+    myComplete.textContent = "Complete";
+
+    myComplete.onclick = function() {
+      myTasks[myI].done = !myTasks[myI].done;
+      mySaveTasks();
+      myShowTasks();
+    };
+
+    let myDelete = document.createElement("button");
+    myDelete.textContent = "Delete";
+
+    myDelete.onclick = function() {
+      myTasks.splice(myI, 1);
+      mySaveTasks();
+      myShowTasks();
+    };
+
+    myOutput.appendChild(myText);
+    myOutput.appendChild(myComplete);
+    myOutput.appendChild(myDelete);
+  }
+}
+
+
+// Add a new task
+
+function myAddTask() {
+  let myNewTask = document.getElementById("myTask").value;
+
+  if (myNewTask.trim() == "") {
+    alert("Please enter a task!");
+    return;
+  }
+
+  myTasks.push({
+    name: myNewTask,
+    done: false
+  });
+
+  document.getElementById("myTask").value = "";
+
+  mySaveTasks();
+  myShowTasks();
+}
+
+
+// Show saved tasks when the page opens
+
+myShowTasks();
+
+</script>
+
+</body>
+</html>
+
