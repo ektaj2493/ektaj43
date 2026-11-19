@@ -1,62 +1,275 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>t2a22-local-storage-Ektaj.html</title>
+  <meta charset="UTF-8">
+  <title>t2a22-local-storage-fred.html</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #eef2f7;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: darkblue;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    input, select, button {
+      padding: 9px;
+      margin: 4px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .task {
+      background: #f1f5f9;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .task-name {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #555;
+    }
+
+    #myCount {
+      font-weight: bold;
+      color: darkblue;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>My To-Do List</h1>
+<div class="container">
 
-<p>Enter a task:</p>
+  <h1>My To-Do List</h1>
 
-<input id="myTask" placeholder="Write a task here">
+  <h3>Add a Task</h3>
 
-<button onclick="myAddTask()">Add Task</button>
+  <input id="myTask" placeholder="What do you need to do?">
 
-<h2>My Tasks</h2>
+  <input type="date" id="myDate">
 
-<div id="myList"></div>
+  <select id="myPriority">
+    <option value="Low">Low Priority</option>
+    <option value="Medium">Medium Priority</option>
+    <option value="High">High Priority</option>
+  </select>
+
+  <button onclick="myAddTask()">Add Task</button>
+
+  <button onclick="myExamples()">Add Examples</button>
+
+  <hr>
+
+  <h3>Find Tasks</h3>
+
+  <input id="mySearch" placeholder="Search tasks..." oninput="myShowTasks()">
+
+  <br>
+
+  <button onclick="myFilter = 'All'; myShowTasks()">All</button>
+
+  <button onclick="myFilter = 'Active'; myShowTasks()">Active</button>
+
+  <button onclick="myFilter = 'Completed'; myShowTasks()">Completed</button>
+
+  <p id="myCount"></p>
+
+  <h3>My Tasks</h3>
+
+  <div id="myList"></div>
+
+  <hr>
+
+  <h3>Manage Your List</h3>
+
+  <button onclick="myClearCompleted()">Clear Completed</button>
+
+  <button onclick="myClearAll()">Delete All Tasks</button>
+
+  <button onclick="myExport()">Export Tasks</button>
+
+  <p class="small">
+    Your tasks are automatically saved on this computer.
+  </p>
+
+</div>
 
 <script>
 
-// Get saved tasks from local storage
+// Load saved tasks
 
-let myTasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+let myTasks = [];
+
+try {
+  myTasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+} catch (myError) {
+  myTasks = [];
+}
+
+let myFilter = "All";
 
 
-// Save tasks to the computer
+// Save tasks to local storage
 
 function mySaveTasks() {
   localStorage.setItem("myTasks", JSON.stringify(myTasks));
 }
 
 
-// Show all tasks
+// Add a task
+
+function myAddTask() {
+
+  let myName = document.getElementById("myTask").value.trim();
+  let myDate = document.getElementById("myDate").value;
+  let myPriority = document.getElementById("myPriority").value;
+
+  if (myName == "") {
+    alert("Please enter a task!");
+    return;
+  }
+
+  myTasks.push({
+    name: myName,
+    date: myDate,
+    priority: myPriority,
+    done: false
+  });
+
+  document.getElementById("myTask").value = "";
+  document.getElementById("myDate").value = "";
+
+  mySaveTasks();
+  myShowTasks();
+}
+
+
+// Press Enter to add a task
+
+document.getElementById("myTask").addEventListener("keydown", function(myEvent) {
+  if (myEvent.key == "Enter") {
+    myAddTask();
+  }
+});
+
+
+// Display tasks
 
 function myShowTasks() {
-  let myOutput = document.getElementById("myList");
-  myOutput.innerHTML = "";
+
+  let myList = document.getElementById("myList");
+  let mySearch = document.getElementById("mySearch").value.toLowerCase();
+
+  myList.innerHTML = "";
+
+  let myCompleted = 0;
+  let myActive = 0;
 
   for (let myI = 0; myI < myTasks.length; myI++) {
 
-    let myText = document.createElement("p");
-
-    myText.textContent = myTasks[myI].name;
-
     if (myTasks[myI].done) {
-      myText.style.textDecoration = "line-through";
+      myCompleted++;
+    } else {
+      myActive++;
     }
 
+    let myTask = myTasks[myI];
+
+    // Search filter
+
+    if (!myTask.name.toLowerCase().includes(mySearch)) {
+      continue;
+    }
+
+    // Completion filter
+
+    if (myFilter == "Active" && myTask.done) {
+      continue;
+    }
+
+    if (myFilter == "Completed" && !myTask.done) {
+      continue;
+    }
+
+    // Create task display
+
+    let myBox = document.createElement("div");
+    myBox.className = "task";
+
+    let myName = document.createElement("span");
+    myName.className = "task-name";
+
+    if (myTask.done) {
+      myName.classList.add("done");
+    }
+
+    myName.textContent = myTask.name;
+
+    let myInfo = document.createElement("span");
+    myInfo.className = "small";
+    myInfo.textContent =
+      myTask.priority + " Priority" +
+      (myTask.date ? " | Due: " + myTask.date : "");
+
+    // Complete button
+
     let myComplete = document.createElement("button");
-    myComplete.textContent = "Complete";
+
+    myComplete.textContent = myTask.done ? "Undo" : "Complete";
 
     myComplete.onclick = function() {
       myTasks[myI].done = !myTasks[myI].done;
       mySaveTasks();
       myShowTasks();
     };
+
+    // Edit button
+
+    let myEdit = document.createElement("button");
+    myEdit.textContent = "Edit";
+
+    myEdit.onclick = function() {
+      let myNewName = prompt("Edit your task:", myTasks[myI].name);
+
+      if (myNewName !== null && myNewName.trim() !== "") {
+        myTasks[myI].name = myNewName.trim();
+        mySaveTasks();
+        myShowTasks();
+      }
+    };
+
+    // Delete button
 
     let myDelete = document.createElement("button");
     myDelete.textContent = "Delete";
@@ -67,36 +280,114 @@ function myShowTasks() {
       myShowTasks();
     };
 
-    myOutput.appendChild(myText);
-    myOutput.appendChild(myComplete);
-    myOutput.appendChild(myDelete);
+    myBox.appendChild(myName);
+    myBox.appendChild(myInfo);
+    myBox.appendChild(myComplete);
+    myBox.appendChild(myEdit);
+    myBox.appendChild(myDelete);
+
+    myList.appendChild(myBox);
   }
+
+  // Show task counts
+
+  document.getElementById("myCount").textContent =
+    "Total: " + myTasks.length +
+    " | Active: " + myActive +
+    " | Completed: " + myCompleted;
+
+  if (myList.innerHTML == "") {
+    myList.textContent = "No tasks found!";
+  }
+
 }
 
 
-// Add a new task
+// Add example tasks
 
-function myAddTask() {
-  let myNewTask = document.getElementById("myTask").value;
+function myExamples() {
 
-  if (myNewTask.trim() == "") {
-    alert("Please enter a task!");
-    return;
-  }
-
-  myTasks.push({
-    name: myNewTask,
-    done: false
-  });
-
-  document.getElementById("myTask").value = "";
+  myTasks.push(
+    {
+      name: "Finish my homework",
+      date: "",
+      priority: "High",
+      done: false
+    },
+    {
+      name: "Clean my room",
+      date: "",
+      priority: "Medium",
+      done: false
+    },
+    {
+      name: "Read a book",
+      date: "",
+      priority: "Low",
+      done: true
+    }
+  );
 
   mySaveTasks();
   myShowTasks();
+
 }
 
 
-// Show saved tasks when the page opens
+// Clear completed tasks
+
+function myClearCompleted() {
+
+  myTasks = myTasks.filter(function(myTask) {
+    return !myTask.done;
+  });
+
+  mySaveTasks();
+  myShowTasks();
+
+}
+
+
+// Delete all tasks
+
+function myClearAll() {
+
+  if (confirm("Are you sure you want to delete all tasks?")) {
+    myTasks = [];
+    mySaveTasks();
+    myShowTasks();
+  }
+
+}
+
+
+// Export tasks as a text file
+
+function myExport() {
+
+  let myText = "";
+
+  for (let myI = 0; myI < myTasks.length; myI++) {
+
+    myText += (myTasks[myI].done ? "[X] " : "[ ] ");
+    myText += myTasks[myI].name;
+    myText += " - " + myTasks[myI].priority + " Priority\n";
+
+  }
+
+  let myFile = new Blob([myText], {type: "text/plain"});
+  let myLink = document.createElement("a");
+
+  myLink.href = URL.createObjectURL(myFile);
+  myLink.download = "my-tasks.txt";
+  myLink.click();
+
+  URL.revokeObjectURL(myLink.href);
+
+}
+
+
+// Show saved tasks when page opens
 
 myShowTasks();
 
