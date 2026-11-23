@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,23 +9,48 @@
 
 <h1>t2a20-sort-Ektaj.html</h1>
 
-<h2>Manual Alphabet Sort</h2>
+<h2>1. Manual Alphabet Sort</h2>
 
 <button onclick="myRandom()">Set Random</button>
 <button onclick="myShow()">Show</button>
-<button onclick="mySort()">Sort</button>
+<button onclick="mySort()">Sort A-Z</button>
+<button onclick="myReverse()">Sort Z-A</button>
+<button onclick="myReset()">Reset</button>
 
 <div id="myDiv"></div>
+<p id="myStatus"></p>
 
-<h2>Seeded Alphabet Sort</h2>
+
+<h2>2. Seeded Alphabet Sort</h2>
 
 Seed: <input id="mySeed" value="123">
+
 <button onclick="mySeedRandom()">Generate</button>
 <button onclick="mySeedSort()">Sort</button>
 
 <div id="myDiv2"></div>
 
+
+<h2>3. Number Sort</h2>
+
+<button onclick="myNumberRandom()">Random Numbers</button>
+<button onclick="myNumberSort()">Sort Numbers</button>
+
+<div id="myDiv3"></div>
+<p id="myNumberStatus"></p>
+
+
+<h2>4. Word Sort</h2>
+
+<button onclick="myWordRandom()">Shuffle Words</button>
+<button onclick="myWordSort()">Sort Words A-Z</button>
+
+<div id="myDiv4"></div>
+
+
 <script>
+
+// 1. MANUAL ALPHABET SORT
 
 let myLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -35,18 +59,24 @@ function myShow() {
 }
 
 function myRandom() {
-  for (let myI = 0; myI < myLetters.length; myI++) {
-    let myJ = Math.floor(Math.random() * 26);
+  for (let myI = myLetters.length - 1; myI > 0; myI--) {
+    let myJ = Math.floor(Math.random() * (myI + 1));
     let myTemp = myLetters[myI];
     myLetters[myI] = myLetters[myJ];
     myLetters[myJ] = myTemp;
   }
+
   myShow();
+  document.getElementById("myStatus").innerHTML = "Letters shuffled!";
 }
 
 function mySort() {
+  let myCount = 0;
+
   for (let myI = 0; myI < myLetters.length; myI++) {
     for (let myJ = 0; myJ < myLetters.length - 1; myJ++) {
+      myCount++;
+
       if (myLetters[myJ] > myLetters[myJ + 1]) {
         let myTemp = myLetters[myJ];
         myLetters[myJ] = myLetters[myJ + 1];
@@ -54,20 +84,43 @@ function mySort() {
       }
     }
   }
+
   myShow();
+  document.getElementById("myStatus").innerHTML =
+    "Sorted A-Z! Comparisons: " + myCount;
+}
+
+function myReverse() {
+  mySort();
+  myLetters.reverse();
+  myShow();
+  document.getElementById("myStatus").innerHTML = "Sorted Z-A!";
+}
+
+function myReset() {
+  myLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  myShow();
+  document.getElementById("myStatus").innerHTML = "Alphabet reset!";
 }
 
 
-// Seeded version
+// 2. SEEDED ALPHABET SORT
 
 let myLetters2 = [];
 
 function mySeedRandom() {
   let mySeed = Number(document.getElementById("mySeed").value);
+
+  if (!Number.isFinite(mySeed) || document.getElementById("mySeed").value.trim() == "") {
+    alert("Enter a valid number for the seed!");
+    return;
+  }
+
   myLetters2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   for (let myI = myLetters2.length - 1; myI > 0; myI--) {
     mySeed = (mySeed * 9301 + 49297) % 233280;
+
     let myJ = Math.floor((mySeed / 233280) * (myI + 1));
 
     let myTemp = myLetters2[myI];
@@ -75,10 +128,19 @@ function mySeedRandom() {
     myLetters2[myJ] = myTemp;
   }
 
+  mySeedShow();
+}
+
+function mySeedShow() {
   document.getElementById("myDiv2").innerHTML = myLetters2.join(" ");
 }
 
 function mySeedSort() {
+  if (myLetters2.length == 0) {
+    alert("Generate letters first!");
+    return;
+  }
+
   for (let myI = 0; myI < myLetters2.length; myI++) {
     for (let myJ = 0; myJ < myLetters2.length - 1; myJ++) {
       if (myLetters2[myJ] > myLetters2[myJ + 1]) {
@@ -89,13 +151,94 @@ function mySeedSort() {
     }
   }
 
-  document.getElementById("myDiv2").innerHTML = myLetters2.join(" ");
+  mySeedShow();
 }
 
+
+// 3. NUMBER SORT
+
+let myNumbers = [8, 3, 10, 1, 6, 4, 9, 2, 7, 5];
+
+function myNumberShow() {
+  document.getElementById("myDiv3").innerHTML = myNumbers.join(", ");
+}
+
+function myNumberRandom() {
+  myNumbers = [];
+
+  for (let myI = 0; myI < 10; myI++) {
+    myNumbers.push(Math.floor(Math.random() * 100) + 1);
+  }
+
+  myNumberShow();
+  document.getElementById("myNumberStatus").innerHTML = "New random numbers!";
+}
+
+function myNumberSort() {
+  let myCount = 0;
+
+  for (let myI = 0; myI < myNumbers.length; myI++) {
+    for (let myJ = 0; myJ < myNumbers.length - 1; myJ++) {
+      myCount++;
+
+      if (myNumbers[myJ] > myNumbers[myJ + 1]) {
+        let myTemp = myNumbers[myJ];
+        myNumbers[myJ] = myNumbers[myJ + 1];
+        myNumbers[myJ + 1] = myTemp;
+      }
+    }
+  }
+
+  myNumberShow();
+
+  document.getElementById("myNumberStatus").innerHTML =
+    "Numbers sorted! Comparisons: " + myCount;
+}
+
+
+// 4. WORD SORT
+
+let myWords = ["Banana", "Apple", "Orange", "Grape", "Mango", "Cherry"];
+
+function myWordShow() {
+  document.getElementById("myDiv4").innerHTML = myWords.join(", ");
+}
+
+function myWordRandom() {
+  for (let myI = myWords.length - 1; myI > 0; myI--) {
+    let myJ = Math.floor(Math.random() * (myI + 1));
+
+    let myTemp = myWords[myI];
+    myWords[myI] = myWords[myJ];
+    myWords[myJ] = myTemp;
+  }
+
+  myWordShow();
+}
+
+function myWordSort() {
+  for (let myI = 0; myI < myWords.length; myI++) {
+    for (let myJ = 0; myJ < myWords.length - 1; myJ++) {
+      if (myWords[myJ].toLowerCase() > myWords[myJ + 1].toLowerCase()) {
+        let myTemp = myWords[myJ];
+        myWords[myJ] = myWords[myJ + 1];
+        myWords[myJ + 1] = myTemp;
+      }
+    }
+  }
+
+  myWordShow();
+}
+
+
+// Show examples when page opens
+
 myShow();
-mySeedRandom();
+myNumberShow();
+myWordShow();
 
 </script>
 
 </body>
 </html>
+
