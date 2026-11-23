@@ -1,41 +1,211 @@
-<h2 align="center">t2a23-canvas-by-Ektaj.html</h2>
-Click the button to draw basic shapes, then ask AI to help you add more!<br><br>
-<input type="button" value="Draw Basic Shapes" onclick="{
-  // 1. Clear the canvas first so shapes don't overlap when clicked twice
-  myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
-  //2. Draw a simple Line 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>t2a23-canvas-by-Ektaj.html</title>
+</head>
+
+<body>
+
+<h2 align="center">t2a23-canvas-by-Ektaj.html</h2>
+
+Click the buttons to draw different shapes on the canvas!
+
+<br><br>
+
+<input type="button" value="Draw Basic Shapes" onclick="myDrawBasic()">
+
+<input type="button" value="Draw More Shapes" onclick="myDrawMore()">
+
+<input type="button" value="Draw a House" onclick="myDrawHouse()">
+
+<input type="button" value="Smiley Face" onclick="myDrawSmiley()">
+
+<input type="button" value="Clear Canvas" onclick="myClear()">
+
+<br><br>
+
+<canvas id="myCoolTag" width="600" height="400"
+style="border:1px solid black;"></canvas>
+
+<script>
+
+// Set up canvas variables
+
+let myCanvas = document.getElementById('myCoolTag');
+let myContext = myCanvas.getContext('2d');
+
+
+// Clear the canvas
+
+function myClear() {
+  myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+}
+
+
+// Draw basic shapes
+
+function myDrawBasic() {
+
+  myClear();
+
+  // Draw a line
   myContext.beginPath();
-  myContext.linewidth = 3;
+  myContext.lineWidth = 3;
   myContext.strokeStyle = 'black';
-  myContext.moveTo(20, 20);       //Start point (x, y)
-  myContext.lineTo(150, 20);     // End point (x, y)
+  myContext.moveTo(20, 20);
+  myContext.lineTo(200, 20);
   myContext.stroke();
 
-  // 3. Draw a solid Rectangle
+  // Draw a rectangle
   myContext.fillStyle = 'blue';
-  myContext.fillRect(30, 50, 100, 60); // (x, y, width, height)
+  myContext.fillRect(30, 50, 100, 60);
 
-  // 4. Draw a Circle
+  // Draw a circle
   myContext.beginPath();
   myContext.lineWidth = 5;
   myContext.strokeStyle = 'green';
-  myContext.arc(220, 80, 40, 0, 2* Math.PI); // (x,y, raidus, start, end)
+  myContext.arc(220, 80, 40, 0, 2 * Math.PI);
   myContext.stroke();
 
-  // 5. Write some Text 
+  // Draw text
   myContext.fillStyle = 'red';
   myContext.font = '24px Arial';
-  myContext.fillText('Hello World!', 30, 180); // ('text', x, y)
-}"><br><br>
+  myContext.fillText('Hello World!', 30, 180);
 
-<!-- Smaller canvas so everything fits on 3/4 of a page -->
-<canvas id="myCoolTag" width="500" height="300" style="border:1px solid #000000;"></canvas>canvas>
+  // Draw a second rectangle
+  myContext.fillStyle = 'orange';
+  myContext.fillRect(300, 50, 100, 60);
 
-<script> 
-// Set up global variavles
-let myCanvas
-let myContext = myCanvas.getContext('2d');
+}
+
+
+// Draw more shapes
+
+function myDrawMore() {
+
+  myClear();
+
+  // Draw a triangle
+  myContext.beginPath();
+  myContext.fillStyle = 'purple';
+  myContext.moveTo(100, 40);
+  myContext.lineTo(40, 150);
+  myContext.lineTo(160, 150);
+  myContext.closePath();
+  myContext.fill();
+
+  // Draw an oval
+  myContext.beginPath();
+  myContext.fillStyle = 'orange';
+  myContext.ellipse(300, 100, 80, 40, 0, 0, 2 * Math.PI);
+  myContext.fill();
+
+  // Draw a star
+  myContext.beginPath();
+  myContext.fillStyle = 'gold';
+  myContext.moveTo(450, 40);
+  myContext.lineTo(465, 80);
+  myContext.lineTo(510, 80);
+  myContext.lineTo(475, 110);
+  myContext.lineTo(490, 155);
+  myContext.lineTo(450, 130);
+  myContext.lineTo(410, 155);
+  myContext.lineTo(425, 110);
+  myContext.lineTo(390, 80);
+  myContext.lineTo(435, 80);
+  myContext.closePath();
+  myContext.fill();
+
+  // Add text
+  myContext.fillStyle = 'black';
+  myContext.font = '22px Arial';
+  myContext.fillText('More Shapes!', 200, 230);
+
+}
+
+
+// Draw a house
+
+function myDrawHouse() {
+
+  myClear();
+
+  // House walls
+  myContext.fillStyle = 'lightblue';
+  myContext.fillRect(180, 170, 220, 160);
+
+  // Roof
+  myContext.beginPath();
+  myContext.fillStyle = 'brown';
+  myContext.moveTo(150, 170);
+  myContext.lineTo(290, 60);
+  myContext.lineTo(430, 170);
+  myContext.closePath();
+  myContext.fill();
+
+  // Door
+  myContext.fillStyle = 'darkred';
+  myContext.fillRect(270, 240, 50, 90);
+
+  // Door knob
+  myContext.beginPath();
+  myContext.fillStyle = 'yellow';
+  myContext.arc(310, 285, 4, 0, 2 * Math.PI);
+  myContext.fill();
+
+  // Windows
+  myContext.fillStyle = 'lightyellow';
+  myContext.fillRect(200, 200, 45, 45);
+  myContext.fillRect(335, 200, 45, 45);
+
+  // Window lines
+  myContext.strokeStyle = 'black';
+  myContext.lineWidth = 2;
+
+  myContext.strokeRect(200, 200, 45, 45);
+  myContext.strokeRect(335, 200, 45, 45);
+
+}
+
+
+// Draw a smiley face
+
+function myDrawSmiley() {
+
+  myClear();
+
+  // Face
+  myContext.beginPath();
+  myContext.fillStyle = 'yellow';
+  myContext.arc(300, 190, 120, 0, 2 * Math.PI);
+  myContext.fill();
+
+  myContext.strokeStyle = 'black';
+  myContext.lineWidth = 5;
+  myContext.stroke();
+
+  // Left eye
+  myContext.beginPath();
+  myContext.fillStyle = 'black';
+  myContext.arc(260, 150, 12, 0, 2 * Math.PI);
+  myContext.fill();
+
+  // Right eye
+  myContext.beginPath();
+  myContext.arc(340, 150, 12, 0, 2 * Math.PI);
+  myContext.fill();
+
+  // Smile
+  myContext.beginPath();
+  myContext.strokeStyle = 'black';
+  myContext.lineWidth = 6;
+  myContext.arc(300, 190, 65, 0.2 * Math.PI, 0.8 * Math.PI);
+  myContext.stroke();
+
+}
+
 </script>
-  
-  
+
+</body>
+</html>
