@@ -26,15 +26,21 @@
 Seed: <input id="mySeed" value="123">
 
 <button onclick="mySeedRandom()">Generate</button>
-<button onclick="mySeedSort()">Sort</button>
+<button onclick="mySeedSort()">Sort A-Z</button>
+<button onclick="mySeedReverse()">Sort Z-A</button>
 
 <div id="myDiv2"></div>
+<p id="mySeedStatus"></p>
 
 
 <h2>3. Number Sort</h2>
 
+Amount: <input id="myAmount" type="number" value="10" min="1" max="100">
+
 <button onclick="myNumberRandom()">Random Numbers</button>
-<button onclick="myNumberSort()">Sort Numbers</button>
+<button onclick="myNumberSort()">Smallest First</button>
+<button onclick="myNumberReverse()">Largest First</button>
+<button onclick="myNumberReset()">Reset</button>
 
 <div id="myDiv3"></div>
 <p id="myNumberStatus"></p>
@@ -42,10 +48,18 @@ Seed: <input id="mySeed" value="123">
 
 <h2>4. Word Sort</h2>
 
+<input id="myNewWord" placeholder="Enter a word">
+<button onclick="myAddWord()">Add Word</button>
+
+<br><br>
+
 <button onclick="myWordRandom()">Shuffle Words</button>
-<button onclick="myWordSort()">Sort Words A-Z</button>
+<button onclick="myWordSort()">Sort A-Z</button>
+<button onclick="myWordReverse()">Sort Z-A</button>
+<button onclick="myWordReset()">Reset</button>
 
 <div id="myDiv4"></div>
+<p id="myWordStatus"></p>
 
 
 <script>
@@ -53,6 +67,7 @@ Seed: <input id="mySeed" value="123">
 // 1. MANUAL ALPHABET SORT
 
 let myLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+let myOriginalLetters = myLetters.slice();
 
 function myShow() {
   document.getElementById("myDiv").innerHTML = myLetters.join(" ");
@@ -98,7 +113,7 @@ function myReverse() {
 }
 
 function myReset() {
-  myLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  myLetters = myOriginalLetters.slice();
   myShow();
   document.getElementById("myStatus").innerHTML = "Alphabet reset!";
 }
@@ -111,10 +126,13 @@ let myLetters2 = [];
 function mySeedRandom() {
   let mySeed = Number(document.getElementById("mySeed").value);
 
-  if (!Number.isFinite(mySeed) || document.getElementById("mySeed").value.trim() == "") {
-    alert("Enter a valid number for the seed!");
+  if (!Number.isSafeInteger(mySeed) ||
+      document.getElementById("mySeed").value.trim() == "") {
+    alert("Enter a whole number for the seed!");
     return;
   }
+
+  mySeed = ((mySeed % 233280) + 233280) % 233280;
 
   myLetters2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -129,6 +147,9 @@ function mySeedRandom() {
   }
 
   mySeedShow();
+
+  document.getElementById("mySeedStatus").innerHTML =
+    "Generated using seed: " + document.getElementById("mySeed").value;
 }
 
 function mySeedShow() {
@@ -141,8 +162,12 @@ function mySeedSort() {
     return;
   }
 
+  let myCount = 0;
+
   for (let myI = 0; myI < myLetters2.length; myI++) {
     for (let myJ = 0; myJ < myLetters2.length - 1; myJ++) {
+      myCount++;
+
       if (myLetters2[myJ] > myLetters2[myJ + 1]) {
         let myTemp = myLetters2[myJ];
         myLetters2[myJ] = myLetters2[myJ + 1];
@@ -152,21 +177,45 @@ function mySeedSort() {
   }
 
   mySeedShow();
+
+  document.getElementById("mySeedStatus").innerHTML =
+    "Sorted A-Z! Comparisons: " + myCount;
+}
+
+function mySeedReverse() {
+  if (myLetters2.length == 0) {
+    alert("Generate letters first!");
+    return;
+  }
+
+  mySeedSort();
+  myLetters2.reverse();
+  mySeedShow();
+
+  document.getElementById("mySeedStatus").innerHTML = "Sorted Z-A!";
 }
 
 
 // 3. NUMBER SORT
 
 let myNumbers = [8, 3, 10, 1, 6, 4, 9, 2, 7, 5];
+let myOriginalNumbers = myNumbers.slice();
 
 function myNumberShow() {
   document.getElementById("myDiv3").innerHTML = myNumbers.join(", ");
 }
 
 function myNumberRandom() {
+  let myAmount = Number(document.getElementById("myAmount").value);
+
+  if (!Number.isInteger(myAmount) || myAmount < 1 || myAmount > 100) {
+    alert("Choose an amount from 1 to 100!");
+    return;
+  }
+
   myNumbers = [];
 
-  for (let myI = 0; myI < 10; myI++) {
+  for (let myI = 0; myI < myAmount; myI++) {
     myNumbers.push(Math.floor(Math.random() * 100) + 1);
   }
 
@@ -192,16 +241,52 @@ function myNumberSort() {
   myNumberShow();
 
   document.getElementById("myNumberStatus").innerHTML =
-    "Numbers sorted! Comparisons: " + myCount;
+    "Smallest first! Comparisons: " + myCount;
+}
+
+function myNumberReverse() {
+  myNumberSort();
+  myNumbers.reverse();
+  myNumberShow();
+
+  document.getElementById("myNumberStatus").innerHTML =
+    "Largest first!";
+}
+
+function myNumberReset() {
+  myNumbers = myOriginalNumbers.slice();
+  myNumberShow();
+
+  document.getElementById("myNumberStatus").innerHTML =
+    "Numbers reset!";
 }
 
 
 // 4. WORD SORT
 
 let myWords = ["Banana", "Apple", "Orange", "Grape", "Mango", "Cherry"];
+let myOriginalWords = myWords.slice();
 
 function myWordShow() {
   document.getElementById("myDiv4").innerHTML = myWords.join(", ");
+}
+
+function myAddWord() {
+  let myWord = document.getElementById("myNewWord").value.trim();
+
+  if (myWord == "") {
+    alert("Enter a word first!");
+    return;
+  }
+
+  myWords.push(myWord);
+
+  document.getElementById("myNewWord").value = "";
+
+  myWordShow();
+
+  document.getElementById("myWordStatus").innerHTML =
+    "Word added!";
 }
 
 function myWordRandom() {
@@ -214,12 +299,21 @@ function myWordRandom() {
   }
 
   myWordShow();
+
+  document.getElementById("myWordStatus").innerHTML =
+    "Words shuffled!";
 }
 
 function myWordSort() {
+  let myCount = 0;
+
   for (let myI = 0; myI < myWords.length; myI++) {
     for (let myJ = 0; myJ < myWords.length - 1; myJ++) {
-      if (myWords[myJ].toLowerCase() > myWords[myJ + 1].toLowerCase()) {
+      myCount++;
+
+      if (myWords[myJ].toLowerCase() >
+          myWords[myJ + 1].toLowerCase()) {
+
         let myTemp = myWords[myJ];
         myWords[myJ] = myWords[myJ + 1];
         myWords[myJ + 1] = myTemp;
@@ -228,10 +322,30 @@ function myWordSort() {
   }
 
   myWordShow();
+
+  document.getElementById("myWordStatus").innerHTML =
+    "Words sorted A-Z! Comparisons: " + myCount;
+}
+
+function myWordReverse() {
+  myWordSort();
+  myWords.reverse();
+  myWordShow();
+
+  document.getElementById("myWordStatus").innerHTML =
+    "Words sorted Z-A!";
+}
+
+function myWordReset() {
+  myWords = myOriginalWords.slice();
+  myWordShow();
+
+  document.getElementById("myWordStatus").innerHTML =
+    "Words reset!";
 }
 
 
-// Show examples when page opens
+// SHOW EXAMPLES WHEN PAGE OPENS
 
 myShow();
 myNumberShow();
