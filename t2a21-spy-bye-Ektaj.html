@@ -3,67 +3,190 @@
 <html>
 <head>
   <title>t2a21-spy-by-Ektaj.html</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 25px;
+      background: #f2f5fa;
+    }
+
+    h1 {
+      color: darkblue;
+      text-align: center;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    textarea {
+      width: 95%;
+      max-width: 600px;
+      padding: 8px;
+    }
+
+    button, input {
+      padding: 7px;
+      margin: 4px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
 <h1>t2a21-spy-by-Ektaj.html</h1>
 
-<h2>Simple Encryption - Caesar Cipher</h2>
+<p>Try encrypting and decrypting messages with these different ciphers!</p>
 
-<textarea id="myText1" rows="4" cols="60">Hello how are you</textarea>
+
+<!-- 1. CAESAR CIPHER -->
+
+<div class="box">
+
+<h2>1. Simple Encryption - Caesar Cipher</h2>
+
+Shift Number:
+<input type="number" id="myShift" value="3" min="0" max="25">
+
+<br><br>
+
+Original Message:
 <br>
+<textarea id="myText1" rows="3">Hello how are you</textarea>
+
+<br>
+
 <button onclick="myEncrypt()">Encrypt</button>
-
-<br><br>
-
-<textarea id="myText2" rows="4" cols="60"></textarea>
-<br>
 <button onclick="myDecrypt()">Decrypt</button>
+<button onclick="myClear1()">Clear</button>
 
 <br><br>
 
-<textarea id="myText3" rows="4" cols="60"></textarea>
+Encrypted / Decrypted Message:
+<br>
+<textarea id="myText2" rows="3"></textarea>
+
+</div>
 
 
-<h2>Advanced Encryption - Vigenere Cipher</h2>
+<!-- 2. VIGENERE CIPHER -->
+
+<div class="box">
+
+<h2>2. Advanced Encryption - Vigenere Cipher</h2>
 
 Secret Key:
 <input id="myKey" value="SECRET">
 
 <br><br>
 
-<textarea id="myText4" rows="4" cols="60">Hello how are you</textarea>
+Original Message:
 <br>
+<textarea id="myText3" rows="3">Hello how are you</textarea>
+
+<br>
+
 <button onclick="myAdvancedEncrypt()">Encrypt</button>
-
-<br><br>
-
-<textarea id="myText5" rows="4" cols="60"></textarea>
-<br>
 <button onclick="myAdvancedDecrypt()">Decrypt</button>
+<button onclick="myClear2()">Clear</button>
 
 <br><br>
 
-<textarea id="myText6" rows="4" cols="60"></textarea>
+Encrypted / Decrypted Message:
+<br>
+<textarea id="myText4" rows="3"></textarea>
+
+</div>
+
+
+<!-- 3. ATBASH CIPHER -->
+
+<div class="box">
+
+<h2>3. Extra Cipher - Atbash</h2>
+
+<p>This cipher reverses the alphabet. A becomes Z, B becomes Y, and so on.</p>
+
+Original Message:
+<br>
+<textarea id="myText5" rows="3">Hello World</textarea>
+
+<br>
+
+<button onclick="myAtbash()">Encrypt / Decrypt</button>
+<button onclick="myClear3()">Clear</button>
+
+<br><br>
+
+Result:
+<br>
+<textarea id="myText6" rows="3"></textarea>
+
+</div>
+
+
+<!-- 4. REVERSE TEXT -->
+
+<div class="box">
+
+<h2>4. Extra Example - Reverse Text</h2>
+
+<p>This reverses the order of all characters in a message.</p>
+
+<textarea id="myText7" rows="3">Hello World!</textarea>
+
+<br>
+
+<button onclick="myReverseText()">Reverse Message</button>
+<button onclick="myClear4()">Clear</button>
+
+<br><br>
+
+Result:
+<br>
+<textarea id="myText8" rows="3"></textarea>
+
+</div>
 
 
 <script>
 
-// SIMPLE ENCRYPTION
+// 1. CAESAR ENCRYPTION
 
 function myEncrypt() {
+
   let myText = document.getElementById("myText1").value;
+  let myShift = Number(document.getElementById("myShift").value);
+
+  if (!Number.isInteger(myShift) || myShift < 0 || myShift > 25) {
+    alert("Enter a shift from 0 to 25!");
+    return;
+  }
+
   let myAnswer = "";
 
   for (let myI = 0; myI < myText.length; myI++) {
+
     let myCode = myText.charCodeAt(myI);
 
     if (myCode >= 65 && myCode <= 90) {
-      myAnswer += String.fromCharCode((myCode - 65 + 3) % 26 + 65);
+      myAnswer += String.fromCharCode(
+        (myCode - 65 + myShift) % 26 + 65
+      );
     }
     else if (myCode >= 97 && myCode <= 122) {
-      myAnswer += String.fromCharCode((myCode - 97 + 3) % 26 + 97);
+      myAnswer += String.fromCharCode(
+        (myCode - 97 + myShift) % 26 + 97
+      );
     }
     else {
       myAnswer += myText[myI];
@@ -74,56 +197,78 @@ function myEncrypt() {
 }
 
 
-// SIMPLE DECRYPTION
+// CAESAR DECRYPTION
 
 function myDecrypt() {
+
   let myText = document.getElementById("myText2").value;
+  let myShift = Number(document.getElementById("myShift").value);
+
+  if (!Number.isInteger(myShift) || myShift < 0 || myShift > 25) {
+    alert("Enter a shift from 0 to 25!");
+    return;
+  }
+
   let myAnswer = "";
 
   for (let myI = 0; myI < myText.length; myI++) {
+
     let myCode = myText.charCodeAt(myI);
 
     if (myCode >= 65 && myCode <= 90) {
-      myAnswer += String.fromCharCode((myCode - 65 + 23) % 26 + 65);
+      myAnswer += String.fromCharCode(
+        (myCode - 65 - myShift + 26) % 26 + 65
+      );
     }
     else if (myCode >= 97 && myCode <= 122) {
-      myAnswer += String.fromCharCode((myCode - 97 + 23) % 26 + 97);
+      myAnswer += String.fromCharCode(
+        (myCode - 97 - myShift + 26) % 26 + 97
+      );
     }
     else {
       myAnswer += myText[myI];
     }
   }
 
-  document.getElementById("myText3").value = myAnswer;
+  document.getElementById("myText2").value = myAnswer;
 }
 
 
-// ADVANCED ENCRYPTION - VIGENERE
+// 2. VIGENERE ENCRYPTION
 
 function myAdvancedEncrypt() {
-  let myText = document.getElementById("myText4").value;
+
+  let myText = document.getElementById("myText3").value;
   let myKey = document.getElementById("myKey").value.toUpperCase();
-  let myAnswer = "";
-  let myPosition = 0;
 
   if (!/^[A-Z]+$/.test(myKey)) {
-    alert("Use a key containing letters A-Z only.");
+    alert("Secret key must contain letters A-Z only!");
     return;
   }
 
+  let myAnswer = "";
+  let myPosition = 0;
+
   for (let myI = 0; myI < myText.length; myI++) {
+
     let myCode = myText.charCodeAt(myI);
 
     if ((myCode >= 65 && myCode <= 90) ||
         (myCode >= 97 && myCode <= 122)) {
 
-      let myShift = myKey.charCodeAt(myPosition % myKey.length) - 65;
+      let myShift = myKey.charCodeAt(
+        myPosition % myKey.length
+      ) - 65;
 
       if (myCode >= 65 && myCode <= 90) {
-        myAnswer += String.fromCharCode((myCode - 65 + myShift) % 26 + 65);
+        myAnswer += String.fromCharCode(
+          (myCode - 65 + myShift) % 26 + 65
+        );
       }
       else {
-        myAnswer += String.fromCharCode((myCode - 97 + myShift) % 26 + 97);
+        myAnswer += String.fromCharCode(
+          (myCode - 97 + myShift) % 26 + 97
+        );
       }
 
       myPosition++;
@@ -133,39 +278,74 @@ function myAdvancedEncrypt() {
     }
   }
 
-  document.getElementById("myText5").value = myAnswer;
+  document.getElementById("myText4").value = myAnswer;
 }
 
 
-// ADVANCED DECRYPTION - VIGENERE
+// VIGENERE DECRYPTION
 
 function myAdvancedDecrypt() {
-  let myText = document.getElementById("myText5").value;
+
+  let myText = document.getElementById("myText4").value;
   let myKey = document.getElementById("myKey").value.toUpperCase();
-  let myAnswer = "";
-  let myPosition = 0;
 
   if (!/^[A-Z]+$/.test(myKey)) {
-    alert("Use a key containing letters A-Z only.");
+    alert("Secret key must contain letters A-Z only!");
     return;
   }
 
+  let myAnswer = "";
+  let myPosition = 0;
+
   for (let myI = 0; myI < myText.length; myI++) {
+
     let myCode = myText.charCodeAt(myI);
 
     if ((myCode >= 65 && myCode <= 90) ||
         (myCode >= 97 && myCode <= 122)) {
 
-      let myShift = myKey.charCodeAt(myPosition % myKey.length) - 65;
+      let myShift = myKey.charCodeAt(
+        myPosition % myKey.length
+      ) - 65;
 
       if (myCode >= 65 && myCode <= 90) {
-        myAnswer += String.fromCharCode((myCode - 65 - myShift + 26) % 26 + 65);
+        myAnswer += String.fromCharCode(
+          (myCode - 65 - myShift + 26) % 26 + 65
+        );
       }
       else {
-        myAnswer += String.fromCharCode((myCode - 97 - myShift + 26) % 26 + 97);
+        myAnswer += String.fromCharCode(
+          (myCode - 97 - myShift + 26) % 26 + 97
+        );
       }
 
       myPosition++;
+    }
+    else {
+      myAnswer += myText[myI];
+    }
+  }
+
+  document.getElementById("myText4").value = myAnswer;
+}
+
+
+// 3. ATBASH CIPHER
+
+function myAtbash() {
+
+  let myText = document.getElementById("myText5").value;
+  let myAnswer = "";
+
+  for (let myI = 0; myI < myText.length; myI++) {
+
+    let myCode = myText.charCodeAt(myI);
+
+    if (myCode >= 65 && myCode <= 90) {
+      myAnswer += String.fromCharCode(90 - (myCode - 65));
+    }
+    else if (myCode >= 97 && myCode <= 122) {
+      myAnswer += String.fromCharCode(122 - (myCode - 97));
     }
     else {
       myAnswer += myText[myI];
@@ -175,8 +355,49 @@ function myAdvancedDecrypt() {
   document.getElementById("myText6").value = myAnswer;
 }
 
+
+// 4. REVERSE TEXT
+
+function myReverseText() {
+
+  let myText = document.getElementById("myText7").value;
+  let myAnswer = "";
+
+  for (let myI = myText.length - 1; myI >= 0; myI--) {
+    myAnswer += myText[myI];
+  }
+
+  document.getElementById("myText8").value = myAnswer;
+}
+
+
+// CLEAR BUTTONS
+
+function myClear1() {
+  document.getElementById("myText1").value = "";
+  document.getElementById("myText2").value = "";
+}
+
+function myClear2() {
+  document.getElementById("myText3").value = "";
+  document.getElementById("myText4").value = "";
+}
+
+function myClear3() {
+  document.getElementById("myText5").value = "";
+  document.getElementById("myText6").value = "";
+}
+
+function myClear4() {
+  document.getElementById("myText7").value = "";
+  document.getElementById("myText8").value = "";
+}
+
 </script>
 
 </body>
 </html>
+
+
+
 
