@@ -12,26 +12,21 @@ body {
   color: black;
   font-family: "Times New Roman", Times, serif;
 }
-h1 {
-  text-align: center;
-}
+h1 { text-align: center; }
 #myJsonOutput {
   width: 550px;
-  height: 65px;
+  height: 120px;
   max-width: 95%;
-  border: 0;
-  background-color: white;
   font-family: monospace;
 }
 #myImage {
+  display: block;
   width: 555px;
   max-width: 95%;
   max-height: 700px;
   object-fit: contain;
 }
-#myImage[hidden] {
-  display: none;
-}
+#myImage[hidden] { display: none; }
 #myResearch {
   width: 550px;
   max-width: 95%;
@@ -56,10 +51,10 @@ h1 {
 </select>
 
 <p id="myStatus">Choose an option above to load JSON data.</p>
-<pre id="myJsonOutput">Select a JSON connection to see its data here.</pre>
+<pre id="myJsonOutput">JSON information will appear here.</pre>
 
-<img id="myImage" alt="Image returned by the selected JSON connection" hidden>
-<p id="myImageLink"></p>
+<img id="myImage" alt="Image from the selected JSON connection" hidden>
+<p id="myImageMessage"></p>
 
 <p>Put your JSON research below this part.</p>
 <textarea id="myResearch" name="myResearch" placeholder="Write your JSON research here..."></textarea>
@@ -68,52 +63,109 @@ h1 {
 const myConnections = {
   fox: {
     name: "Random Fox",
-    url: "https://randomfox.ca/floof/"
+    url: "https://randomfox.ca/floof/",
+    imagePath: function(myData) { return myData.image || ""; }
   },
   dog: {
     name: "Random Dog",
-    url: "https://dog.ceo/api/breeds/image/random"
+    url: "https://dog.ceo/api/breeds/image/random",
+    imagePath: function(myData) { return myData.message || ""; }
   },
   user: {
     name: "Random User",
-    url: "https://randomuser.me/api/"
+    url: "https://randomuser.me/api/",
+    imagePath: function(myData) {
+      return myData.results && myData.results[0]
+        ? myData.results[0].picture.large : "";
+    }
   },
   photo: {
     name: "Random Photo",
-    url: "https://picsum.photos/v2/list?limit=1"
+    url: "https://picsum.photos/v2/list?limit=1",
+    imagePath: function(myData) {
+      return Array.isArray(myData) && myData[0] ? myData[0].download_url : "";
+    }
   },
   pokemon: {
     name: "Pokemon - Pikachu",
-    url: "https://pokeapi.co/api/v2/pokemon/pikachu"
+    url: "https://pokeapi.co/api/v2/pokemon/pikachu",
+    imagePath: function(myData) {
+      return myData.sprites && myData.sprites.front_default
+        ? myData.sprites.front_default : "";
+    }
   },
   product: {
     name: "Product Information",
-    url: "https://dummyjson.com/products/1"
+    url: "https://dummyjson.com/products/1",
+    imagePath: function(myData) {
+      if (myData.thumbnail) return myData.thumbnail;
+      return myData.images && myData.images.length ? myData.images[0] : "";
+    }
   },
   post: {
     name: "Sample Blog Post",
-    url: "https://jsonplaceholder.typicode.com/posts/1"
+    url: "https://jsonplaceholder.typicode.com/posts/1",
+    imagePath: function() { return ""; }
   },
   catfact: {
     name: "Random Cat Fact",
-    url: "https://catfact.ninja/fact"
+    url: "https://catfact.ninja/fact",
+    imagePath: function() { return ""; }
   }
 };
+
+let myCurrentRequest = 0;
+let myImageFallbackUsed = false;
+
+function myShowImage(myImageUrl, myConnectionName) {
+  const myImage = document.getElementById("myImage");
+  const myImageMessage = document.getElementById("myImageMessage");
+
+  myImage.hidden = true;
+  myImage.removeAttribute("src");
+  myImageMessage.textContent = "";
+
+  // Only display a real HTTP or HTTPS image address.
+  if (typeof myImageUrl !== "string" ||
+      !/^https?:\/\//i.test(myImageUrl)) {
+    myImageMessage.textContent =
+      myConnectionName + " returned JSON data but no image.";
+    return;
+  }
+
+  myImageFallbackUsed = false;
+
+  myImage.onload = function() {
+    myImage.hidden = false;
+    myImageMessage.textContent = "Image loaded successfully.";
+  };
+
+  myImage.onerror = function() {
+    myImage.hidden = true;
+    myImage.removeAttribute("src");
+    myImageMessage.textContent =
+      "The JSON data loaded, but this website's image could not be displayed. Try another option.";
+  };
+
+  myImage.src = myImageUrl;
+}
 
 async function myLoadJson() {
   const myChoice = document.getElementById("myJsonSelect").value;
   const myOutput = document.getElementById("myJsonOutput");
   const myStatus = document.getElementById("myStatus");
   const myImage = document.getElementById("myImage");
-  const myImageLink = document.getElementById("myImageLink");
+  const myImageMessage = document.getElementById("myImageMessage");
+
+  const myRequestNumber = ++myCurrentRequest;
 
   myImage.hidden = true;
   myImage.removeAttribute("src");
-  myImageLink.textContent = "";
+  myImageMessage.textContent = "";
 
   if (myChoice === "") {
     myStatus.textContent = "Choose an option above to load JSON data.";
-    myOutput.textContent = "";
+    myOutput.textContent = "JSON information will appear here.";
     return;
   }
 
@@ -122,108 +174,54 @@ async function myLoadJson() {
   myOutput.textContent = "Please wait...";
 
   try {
-    const myResponse = await fetch(myConnection.url);
+    const myController = new AbortController();
+    const myTimeout = setTimeout(function() {
+      myController.abort();
+    }, 12000);
+
+    let myResponse;
+    try {
+      myResponse = await fetch(myConnection.url, {
+        method: "GET",
+        headers: { "Accept": "application/json" },
+        signal: myController.signal,
+        cache: "no-store"
+      });
+    } finally {
+      clearTimeout(myTimeout);
+    }
 
     if (!myResponse.ok) {
-      throw new Error("HTTP status " + myResponse.status);
+      throw new Error("The server returned status " + myResponse.status);
     }
 
     const myData = await myResponse.json();
 
+    // Ignore an older request if the user selected another option meanwhile.
+    if (myRequestNumber !== myCurrentRequest) return;
+
     myOutput.textContent = JSON.stringify(myData, null, 2);
     myStatus.textContent = "Loaded: " + myConnection.name;
 
-    const myFoundImage = myFindImage(myData);
-
-    if (myFoundImage !== "") {
-      myImage.onload = function() {
-        myStatus.textContent = "Loaded: " + myConnection.name + " (image displayed)";
-      };
-
-      myImage.onerror = function() {
-        myImage.hidden = true;
-        myImageLink.textContent = "The JSON loaded, but its image could not be displayed.";
-      };
-
-      myImage.src = myFoundImage;
-      myImage.alt = "Image from " + myConnection.name;
-      myImage.hidden = false;
-
-      const myLink = document.createElement("a");
-      myLink.href = myFoundImage;
-      myLink.target = "_blank";
-      myLink.rel = "noopener";
-      myLink.textContent = "Open image in a new tab";
-      myImageLink.appendChild(myLink);
-    } else {
-      myImageLink.textContent =
-        "This connection returned JSON information but did not include an image.";
-    }
+    const myImageUrl = myConnection.imagePath(myData);
+    myShowImage(myImageUrl, myConnection.name);
 
   } catch (myError) {
+    if (myRequestNumber !== myCurrentRequest) return;
+
     myStatus.textContent = "Could not load " + myConnection.name + ".";
-    myOutput.textContent =
-      "Error: " + myError.message +
-      "\n\nTry another connection and check your internet connection. " +
-      "Some websites may temporarily block requests from local HTML files.";
-  }
-}
-
-function myFindImage(myData) {
-  if (myData === null || myData === undefined) {
-    return "";
-  }
-
-  if (typeof myData === "string") {
-    if (myData.startsWith("https://") || myData.startsWith("http://")) {
-      return myData;
+    if (myError.name === "AbortError") {
+      myOutput.textContent =
+        "This connection took too long to respond. Please try again or choose another option.";
+    } else {
+      myOutput.textContent =
+        "Error: " + myError.message +
+        "\n\nCheck your internet connection. Some public JSON websites may be temporarily unavailable or may block requests from local HTML files.";
     }
-    return "";
+    myImage.hidden = true;
+    myImage.removeAttribute("src");
+    myImageMessage.textContent = "";
   }
-
-  if (Array.isArray(myData)) {
-    for (const myItem of myData) {
-      const myResult = myFindImage(myItem);
-      if (myResult !== "") {
-        return myResult;
-      }
-    }
-    return "";
-  }
-
-  if (typeof myData === "object") {
-    // Common image fields returned by the eight JSON services.
-    const myImageKeys = [
-      "image",
-      "message",
-      "download_url",
-      "large",
-      "medium",
-      "thumbnail",
-      "front_default"
-    ];
-
-    for (const myKey of myImageKeys) {
-      if (typeof myData[myKey] === "string") {
-        const myValue = myData[myKey];
-
-        if (myValue.startsWith("https://") || myValue.startsWith("http://")) {
-          return myValue;
-        }
-      }
-    }
-
-    // Check nested data such as Random User results, Pokemon sprites,
-    // and product images.
-    for (const myKey in myData) {
-      const myResult = myFindImage(myData[myKey]);
-      if (myResult !== "") {
-        return myResult;
-      }
-    }
-  }
-
-  return "";
 }
 </script>
 </body>
@@ -232,4 +230,6 @@ function myFindImage(myData) {
 
 path = Path("/mnt/data/t2a19-json-fred.html")
 path.write_text(html, encoding="utf-8")
-print(f"Fixed file created: {path} ({path.stat().st_size:,} bytes)")
+print(f"Created robust version: {path} ({path.stat().st_size:,} bytes)")
+
+
