@@ -12,12 +12,8 @@ body {
   color: black;
   font-family: "Times New Roman", Times, serif;
 }
-h1 { text-align: center; }
-#myJsonOutput {
-  width: 550px;
-  height: 120px;
-  max-width: 95%;
-  font-family: monospace;
+h1 {
+  text-align: center;
 }
 #myImage {
   display: block;
@@ -26,7 +22,9 @@ h1 { text-align: center; }
   max-height: 700px;
   object-fit: contain;
 }
-#myImage[hidden] { display: none; }
+#myImage[hidden] {
+  display: none;
+}
 #myResearch {
   width: 550px;
   max-width: 95%;
@@ -45,16 +43,14 @@ h1 { text-align: center; }
   <option value="user">3. Random User</option>
   <option value="photo">4. Random Photo</option>
   <option value="pokemon">5. Pokemon - Pikachu</option>
-  <option value="product">6. Product Information</option>
-  <option value="post">7. Sample Blog Post</option>
-  <option value="catfact">8. Random Cat Fact</option>
+  <option value="product">6. Product Image</option>
+  <option value="cat">7. Random Cat</option>
+  <option value="anime">8. Random Anime Image</option>
 </select>
 
-<p id="myStatus">Choose an option above to load JSON data.</p>
-<pre id="myJsonOutput">JSON information will appear here.</pre>
+<p id="myStatus">Choose an option to display an image.</p>
 
 <img id="myImage" alt="Image from the selected JSON connection" hidden>
-<p id="myImageMessage"></p>
 
 <p>Put your JSON research below this part.</p>
 <textarea id="myResearch" name="myResearch" placeholder="Write your JSON research here..."></textarea>
@@ -64,114 +60,88 @@ const myConnections = {
   fox: {
     name: "Random Fox",
     url: "https://randomfox.ca/floof/",
-    imagePath: function(myData) { return myData.image || ""; }
+    imagePath: function(myData) {
+      return myData.image || "";
+    }
   },
   dog: {
     name: "Random Dog",
     url: "https://dog.ceo/api/breeds/image/random",
-    imagePath: function(myData) { return myData.message || ""; }
+    imagePath: function(myData) {
+      return myData.message || "";
+    }
   },
   user: {
     name: "Random User",
     url: "https://randomuser.me/api/",
     imagePath: function(myData) {
-      return myData.results && myData.results[0]
-        ? myData.results[0].picture.large : "";
+      if (myData.results && myData.results[0]) {
+        return myData.results[0].picture.large;
+      }
+      return "";
     }
   },
   photo: {
     name: "Random Photo",
     url: "https://picsum.photos/v2/list?limit=1",
     imagePath: function(myData) {
-      return Array.isArray(myData) && myData[0] ? myData[0].download_url : "";
+      return Array.isArray(myData) && myData[0]
+        ? myData[0].download_url : "";
     }
   },
   pokemon: {
     name: "Pokemon - Pikachu",
     url: "https://pokeapi.co/api/v2/pokemon/pikachu",
     imagePath: function(myData) {
-      return myData.sprites && myData.sprites.front_default
-        ? myData.sprites.front_default : "";
+      return myData.sprites && myData.sprites.other &&
+        myData.sprites.other["official-artwork"]
+        ? myData.sprites.other["official-artwork"].front_default
+        : myData.sprites.front_default;
     }
   },
   product: {
-    name: "Product Information",
+    name: "Product Image",
     url: "https://dummyjson.com/products/1",
     imagePath: function(myData) {
-      if (myData.thumbnail) return myData.thumbnail;
-      return myData.images && myData.images.length ? myData.images[0] : "";
+      return myData.thumbnail ||
+        (myData.images && myData.images.length ? myData.images[0] : "");
     }
   },
-  post: {
-    name: "Sample Blog Post",
-    url: "https://jsonplaceholder.typicode.com/posts/1",
-    imagePath: function() { return ""; }
+  cat: {
+    name: "Random Cat",
+    url: "https://api.thecatapi.com/v1/images/search",
+    imagePath: function(myData) {
+      return Array.isArray(myData) && myData[0] ? myData[0].url : "";
+    }
   },
-  catfact: {
-    name: "Random Cat Fact",
-    url: "https://catfact.ninja/fact",
-    imagePath: function() { return ""; }
+  anime: {
+    name: "Random Anime Image",
+    url: "https://nekos.best/api/v2/neko",
+    imagePath: function(myData) {
+      return myData.results && myData.results[0]
+        ? myData.results[0].url : "";
+    }
   }
 };
 
 let myCurrentRequest = 0;
-let myImageFallbackUsed = false;
-
-function myShowImage(myImageUrl, myConnectionName) {
-  const myImage = document.getElementById("myImage");
-  const myImageMessage = document.getElementById("myImageMessage");
-
-  myImage.hidden = true;
-  myImage.removeAttribute("src");
-  myImageMessage.textContent = "";
-
-  // Only display a real HTTP or HTTPS image address.
-  if (typeof myImageUrl !== "string" ||
-      !/^https?:\/\//i.test(myImageUrl)) {
-    myImageMessage.textContent =
-      myConnectionName + " returned JSON data but no image.";
-    return;
-  }
-
-  myImageFallbackUsed = false;
-
-  myImage.onload = function() {
-    myImage.hidden = false;
-    myImageMessage.textContent = "Image loaded successfully.";
-  };
-
-  myImage.onerror = function() {
-    myImage.hidden = true;
-    myImage.removeAttribute("src");
-    myImageMessage.textContent =
-      "The JSON data loaded, but this website's image could not be displayed. Try another option.";
-  };
-
-  myImage.src = myImageUrl;
-}
 
 async function myLoadJson() {
   const myChoice = document.getElementById("myJsonSelect").value;
-  const myOutput = document.getElementById("myJsonOutput");
   const myStatus = document.getElementById("myStatus");
   const myImage = document.getElementById("myImage");
-  const myImageMessage = document.getElementById("myImageMessage");
-
   const myRequestNumber = ++myCurrentRequest;
 
   myImage.hidden = true;
   myImage.removeAttribute("src");
-  myImageMessage.textContent = "";
 
   if (myChoice === "") {
-    myStatus.textContent = "Choose an option above to load JSON data.";
-    myOutput.textContent = "JSON information will appear here.";
+    myStatus.textContent = "Choose an option to display an image.";
     return;
   }
 
   const myConnection = myConnections[myChoice];
   myStatus.textContent = "Loading " + myConnection.name + "...";
-  myOutput.textContent = "Please wait...";
 
   try {
     const myController = new AbortController();
@@ -192,35 +162,42 @@ async function myLoadJson() {
     }
 
     if (!myResponse.ok) {
-      throw new Error("The server returned status " + myResponse.status);
+      throw new Error("Server status " + myResponse.status);
     }
 
     const myData = await myResponse.json();
 
-    // Ignore an older request if the user selected another option meanwhile.
     if (myRequestNumber !== myCurrentRequest) return;
 
-    myOutput.textContent = JSON.stringify(myData, null, 2);
-    myStatus.textContent = "Loaded: " + myConnection.name;
-
     const myImageUrl = myConnection.imagePath(myData);
-    myShowImage(myImageUrl, myConnection.name);
+
+    if (typeof myImageUrl !== "string" ||
+        !/^https?:\/\//i.test(myImageUrl)) {
+      throw new Error("No image address was returned.");
+    }
+
+    myImage.onload = function() {
+      if (myRequestNumber !== myCurrentRequest) return;
+      myImage.hidden = false;
+      myStatus.textContent = "";
+    };
+
+    myImage.onerror = function() {
+      if (myRequestNumber !== myCurrentRequest) return;
+      myImage.hidden = true;
+      myImage.removeAttribute("src");
+      myStatus.textContent = "This image could not load. Please choose another option.";
+    };
+
+    myImage.src = myImageUrl;
 
   } catch (myError) {
     if (myRequestNumber !== myCurrentRequest) return;
 
-    myStatus.textContent = "Could not load " + myConnection.name + ".";
-    if (myError.name === "AbortError") {
-      myOutput.textContent =
-        "This connection took too long to respond. Please try again or choose another option.";
-    } else {
-      myOutput.textContent =
-        "Error: " + myError.message +
-        "\n\nCheck your internet connection. Some public JSON websites may be temporarily unavailable or may block requests from local HTML files.";
-    }
     myImage.hidden = true;
     myImage.removeAttribute("src");
-    myImageMessage.textContent = "";
+    myStatus.textContent =
+      "Could not load this image. Check your internet connection or try another option.";
   }
 }
 </script>
@@ -230,6 +207,4 @@ async function myLoadJson() {
 
 path = Path("/mnt/data/t2a19-json-fred.html")
 path.write_text(html, encoding="utf-8")
-print(f"Created robust version: {path} ({path.stat().st_size:,} bytes)")
-
-
+print(f"Created updated image-only page: {path} ({path.stat().st_size:,} bytes)")
