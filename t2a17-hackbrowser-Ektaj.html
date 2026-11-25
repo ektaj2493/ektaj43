@@ -1,1 +1,102 @@
+from pathlib import Path
+path = Path("/mnt/data/t2a17-Hackbrowser-Ektaj.html")
+html = path.read_text(encoding="utf-8")
+
+start = html.index("  <style>")
+end = html.index("  </style>", start) + len("  </style>")
+simple_css = """  <style>
+    body {
+      background-color: #80eeee;
+      font-family: "Times New Roman", serif;
+      color: black;
+    }
+
+    #myOutput {
+      width: 520px;
+      height: 300px;
+    }
+
+    #myImage {
+      width: 400px;
+      height: 200px;
+      object-fit: contain;
+      vertical-align: top;
+      margin-left: 50px;
+    }
+
+    .button-row {
+      margin: 3px 0;
+    }
+  </style>"""
+html = html[:start] + simple_css + html[end:]
+
+# Make the layout resemble the simple original screenshot rather than a modern card layout.
+html = html.replace(
+'''  <header>
+    <div class="eyebrow">JAVASCRIPT • DOM EXPLORER</div>
+    <h1>Browser Hack</h1>
+    <p>Object Sort Base — explore the hidden structure of a webpage. Select an inspector button to see the properties, attributes, and HTML of an object.</p>
+  </header>
+
+  <main>
+    <section class="panel">''',
+'''  <h1>Browser Hack by ______________</h1>
+  Object Sort base
+
+  <main>
+    <section>'''
+)
+html = html.replace('''    </section>
+
+    <section class="panel">
+      <h2>Inspector output</h2>
+      <p class="small">The output shows useful information about the selected object. Some browser objects contain many properties, so this page displays a short selection rather than thousands of entries.</p>''',
+'''    </section>
+
+    <section>
+      <h2>Inspector output</h2>
+      <p>The output shows useful information about the selected object.</p>''')
+html = html.replace('''    <section class="panel">
+      <h2>Extra HTML elements to inspect</h2>
+      <p>These five elements each have both an <code>id</code> and a <code>name</code> attribute. Button 20 checks the working image too.</p>
+      <div class="demo-layout">
+        <div class="demo-card" id="myDemoArea">''',
+'''    <section>
+      <h2>Extra HTML elements to inspect</h2>
+      <p>These elements each have an id and a name. Use buttons 15–20 above to inspect them.</p>
+      <div>
+        <div id="myDemoArea">''')
+html = html.replace('''        </div>
+        <div class="demo-card">
+          <p>20. Working image:</p>''',
+'''        </div>
+        <div>
+          <p>20. Working image:</p>''')
+html = html.replace('''          <p class="small">This illustration is embedded in the HTML file, so it does not depend on an external image website or internet connection.</p>''',
+'''          <p>This illustration is embedded in the HTML file, so it works offline.</p>''')
+html = html.replace('''    <section class="panel">
+      <h2>Back</h2>
+      <p class="small">Use this button to return to the previous page in your browser history.</p>''',
+'''    <section>
+      <h2>Back</h2>
+      <p>Use this button to return to the previous page.</p>''')
+# Ensure default-sized output like screenshot and simple headings.
+html = html.replace('<h2>Instructions: t2a17-Hackbrowser</h2>', '<h3>Instructions t2a17-Hackbrowser</h3>')
+html = html.replace('<h2>Inspector output</h2>', '<h3>Click the buttons to see all useable properties and methods of the object. Click refresh to reset Browser</h3>')
+html = html.replace('<h2>Extra HTML elements to inspect</h2>', '<h3>Extra HTML elements to inspect</h3>')
+html = html.replace('<h2>Back</h2>', '<h3>Back</h3>')
+html = html.replace('<p class="small">The output shows useful information about the selected object.</p>', '')
+html = html.replace('<p class="small">Use this button to return to the previous page.</p>', '')
+html = html.replace('class="button-grid"', 'class="button-row"')
+html = html.replace('class="controls"', 'class="controls"')
+# Keep the original-style large textarea and output area; use normal native controls.
+html = html.replace('class="output" aria-live="polite"', 'aria-live="polite"')
+html = html.replace('class="small"', '')
+html = html.replace('<button type="button" onclick="history.back()">← Back</button>', '<button type="button" onclick="history.back()">Back</button>')
+# Add a refresh button alongside inspector buttons.
+needle = '<div class="button-row" id="myInspectorButtons">'
+html = html.replace(needle, '<button type="button" onclick="location.reload()">Refresh Browser</button>\\n      ' + needle)
+
+path.write_text(html, encoding="utf-8")
+print(f"Updated simple version: {path} ({path.stat().st_size:,} bytes)")
 
