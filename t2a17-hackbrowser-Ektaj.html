@@ -1,102 +1,253 @@
 from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>t2a17-Hackbrowser-Ektaj.html</title>
+<style>
+  body {
+    background-color: #80eeee;
+    font-family: "Times New Roman", Times, serif;
+    color: black;
+  }
+  #myOutput {
+    width: 530px;
+    height: 300px;
+    max-width: 95%;
+  }
+  #myText1 {
+    width: 165px;
+    height: 35px;
+  }
+  #myText2 {
+    width: 380px;
+    height: 18px;
+  }
+  #myImage {
+    width: 400px;
+    height: 200px;
+    margin-left: 50px;
+    vertical-align: top;
+  }
+</style>
+</head>
+
+<body>
+<h3>Browser Hack by ______________</h3>
+Object Sort base
+
+<h3>Instructions t2a17-Hackbrowser</h3>
+<p>
+Use the first 14 buttons to explore browser objects. Use buttons 15-20 to inspect
+the extra HTML elements added below. Results can be different in different browsers.
+</p>
+
+<form id="myForm" name="myForm" onsubmit="return false;">
+  <textarea id="myText1" name="myText1">wow</textarea>
+  <input id="myText2" name="myText2" type="text" value="Type something here">
+</form>
+
+<h3>Click the buttons to see properties and methods of the object. Click Refresh to reset Browser.</h3>
+
+<button type="button" onclick="location.reload()">Refresh Browser</button>
+<br>
+
+<button type="button" onclick="myInspect(1)">1 window</button>
+<button type="button" onclick="myInspect(2)">2 document</button>
+<button type="button" onclick="myInspect(3)">3 document.myForm</button>
+<button type="button" onclick="myInspect(4)">4 document.myForm.myText1</button>
+<button type="button" onclick="myInspect(5)">5 window.location</button>
+<button type="button" onclick="myInspect(6)">6 window.parent</button>
+<button type="button" onclick="myInspect(7)">7 window.chrome</button>
+<button type="button" onclick="myInspect(8)">8 heading.style</button>
+<button type="button" onclick="myInspect(9)">9 document.body.style</button>
+<button type="button" onclick="myInspect(10)">10 document.all</button>
+<button type="button" onclick="myInspect(11)">11 window.localStorage</button>
+<button type="button" onclick="myInspect(12)">12 image.style</button>
+<button type="button" onclick="myInspect(13)">13 document.myForm.myText1</button>
+<button type="button" onclick="myInspect(14)">14 getElementById('myText2')</button>
+<button type="button" onclick="myInspect(15)">15 link</button>
+<button type="button" onclick="myInspect(16)">16 table</button>
+<button type="button" onclick="myInspect(17)">17 list</button>
+<button type="button" onclick="myInspect(18)">18 bold</button>
+<button type="button" onclick="myInspect(19)">19 button</button>
+<button type="button" onclick="myInspect(20)">20 image</button>
+
+<br><br>
+<textarea id="myOutput" name="myOutput" readonly>Click any button to see information about that object.</textarea>
+
+<br><br>
+<h3>Extra HTML elements</h3>
+<p>Each of these elements has both an id and a name. Use buttons 15-20 to inspect them.</p>
+
+<p>
+  Link:
+  <a id="myLink" name="myLink" href="https://www.w3schools.com/html/" target="_blank" rel="noopener">
+    Learn HTML
+  </a>
+</p>
+
+<p>Table:</p>
+<table id="myTable" name="myTable" border="1">
+  <tr><th>HTML element</th><th>What it does</th></tr>
+  <tr><td>Link</td><td>Opens another page</td></tr>
+  <tr><td>Table</td><td>Shows information in rows</td></tr>
+</table>
+
+<p>List:</p>
+<ul id="myList" name="myList">
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+
+<p>Bold tag: <b id="myBold" name="myBold">This text is bold.</b></p>
+
+<p>
+  Button:
+  <button type="button" id="myDemoButton" name="myDemoButton" onclick="myDemoButtonClick()">
+    Click this button
+  </button>
+</p>
+
+<p>
+  Image:
+  <img id="myImage" name="myImage" alt="Browser window illustration with code brackets and a magnifying glass"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' rx='12' fill='%23d9f7f4' stroke='%23005566' stroke-width='4'/%3E%3Crect x='20' y='20' width='360' height='160' rx='8' fill='%231d3557'/%3E%3Cpath d='M80 75 L55 100 L80 125 M145 75 L170 100 L145 125 M125 65 L100 135' fill='none' stroke='%2371e6d1' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='270' cy='92' r='35' fill='none' stroke='%23ffd166' stroke-width='9'/%3E%3Cpath d='M295 118 L330 153' stroke='%23ffd166' stroke-width='11' stroke-linecap='round'/%3E%3C/svg%3E">
+</p>
+
+<p>
+  Change the text in the top-left box, then click here:
+  <button type="button" onclick="myUpdateText()">Update demo text</button>
+</p>
+<p id="myMessage" name="myMessage">The updated text will appear here.</p>
+
+<h3>Back</h3>
+<button type="button" onclick="history.back()">Back</button>
+
+<script>
+function myElementInfo(myElement) {
+  if (!myElement) {
+    return "This object was not found in this browser.";
+  }
+
+  return "Tag name: " + (myElement.tagName || "Not an HTML element") +
+    "\nID: " + (myElement.id || "No id") +
+    "\nName: " + (myElement.getAttribute && myElement.getAttribute("name") || "No name") +
+    "\nText: " + (myElement.textContent || myElement.value || "").trim().slice(0, 250) +
+    "\nHTML: " + (myElement.outerHTML || "Not available").slice(0, 500);
+}
+
+function myInspect(myNumber) {
+  var myOutput = document.getElementById("myOutput");
+  var myForm = document.forms["myForm"];
+  var myText1 = document.getElementById("myText1");
+  var myText2 = document.getElementById("myText2");
+  var myHeading = document.querySelector("h3");
+  var myImage = document.getElementById("myImage");
+  var myMessage = "";
+
+  if (myNumber === 1) {
+    myMessage = "window object\nWidth: " + window.innerWidth +
+      "\nHeight: " + window.innerHeight +
+      "\nCurrent address: " + window.location.href;
+  } else if (myNumber === 2) {
+    myMessage = "document object\nTitle: " + document.title +
+      "\nURL: " + document.URL +
+      "\nReady state: " + document.readyState +
+      "\nNumber of links: " + document.links.length;
+  } else if (myNumber === 3) {
+    myMessage = "document.forms['myForm']\n" + myElementInfo(myForm);
+  } else if (myNumber === 4 || myNumber === 13) {
+    myMessage = "document.myForm.myText1\n" + myElementInfo(myText1) +
+      "\nCurrent value: " + myText1.value;
+  } else if (myNumber === 5) {
+    myMessage = "window.location\nhref: " + location.href +
+      "\nhost: " + location.host +
+      "\npathname: " + location.pathname +
+      "\nprotocol: " + location.protocol;
+  } else if (myNumber === 6) {
+    myMessage = "window.parent\nIs this window its own parent? " +
+      (window.parent === window);
+  } else if (myNumber === 7) {
+    myMessage = "window.chrome\nAvailable in this browser: " +
+      (typeof window.chrome !== "undefined") +
+      "\nThis property is browser-specific, so it may not exist in every browser.";
+  } else if (myNumber === 8) {
+    myMessage = "heading.style\nInline style: " + myHeading.getAttribute("style") +
+      "\nComputed font size: " + getComputedStyle(myHeading).fontSize +
+      "\nComputed color: " + getComputedStyle(myHeading).color;
+  } else if (myNumber === 9) {
+    myMessage = "document.body.style\nInline style: " + document.body.getAttribute("style") +
+      "\nBackground color: " + getComputedStyle(document.body).backgroundColor;
+  } else if (myNumber === 10) {
+    myMessage = "document.all\nAvailable in this browser: " +
+      (typeof document.all !== "undefined") +
+      "\nNumber of elements on this page: " + document.getElementsByTagName("*").length;
+  } else if (myNumber === 11) {
+    try {
+      localStorage.setItem("myTest", "working");
+      myMessage = "window.localStorage\nStorage test: " + localStorage.getItem("myTest");
+      localStorage.removeItem("myTest");
+    } catch (myError) {
+      myMessage = "window.localStorage\nStorage is blocked or unavailable in this browser.";
+    }
+  } else if (myNumber === 12) {
+    myMessage = "document.getElementById('myImage').style\n" +
+      "Inline style: " + myImage.getAttribute("style") +
+      "\nImage width: " + getComputedStyle(myImage).width +
+      "\nImage height: " + getComputedStyle(myImage).height;
+  } else if (myNumber === 14) {
+    myMessage = "document.getElementById('myText2')\n" +
+      myElementInfo(myText2) + "\nCurrent value: " + myText2.value;
+  } else if (myNumber === 15) {
+    myMessage = "Link element\n" + myElementInfo(document.getElementById("myLink")) +
+      "\nLink address: " + document.getElementById("myLink").href;
+  } else if (myNumber === 16) {
+    myMessage = "Table element\n" + myElementInfo(document.getElementById("myTable")) +
+      "\nNumber of rows: " + document.getElementById("myTable").rows.length;
+  } else if (myNumber === 17) {
+    myMessage = "List element\n" + myElementInfo(document.getElementById("myList")) +
+      "\nNumber of list items: " + document.getElementById("myList").getElementsByTagName("li").length;
+  } else if (myNumber === 18) {
+    myMessage = "Bold element\n" + myElementInfo(document.getElementById("myBold"));
+  } else if (myNumber === 19) {
+    myMessage = "Button element\n" + myElementInfo(document.getElementById("myDemoButton")) +
+      "\nButton type: " + document.getElementById("myDemoButton").type;
+  } else if (myNumber === 20) {
+    myMessage = "Image element\n" + myElementInfo(myImage) +
+      "\nImage loaded: " + myImage.complete +
+      "\nImage width: " + myImage.naturalWidth +
+      "\nImage height: " + myImage.naturalHeight;
+  }
+
+  myOutput.value = myMessage;
+}
+
+function myUpdateText() {
+  var myNewText = document.getElementById("myText1").value;
+  if (myNewText.trim() === "") {
+    myNewText = "The text box was empty.";
+  }
+  document.getElementById("myMessage").textContent = myNewText;
+  document.getElementById("myBold").textContent = myNewText;
+  document.getElementById("myText2").value = myNewText;
+}
+
+function myDemoButtonClick() {
+  document.getElementById("myMessage").textContent =
+    "You clicked the extra HTML button. Its id and name are both myDemoButton.";
+  myInspect(19);
+}
+</script>
+</body>
+</html>
+'''
+
 path = Path("/mnt/data/t2a17-Hackbrowser-Ektaj.html")
-html = path.read_text(encoding="utf-8")
-
-start = html.index("  <style>")
-end = html.index("  </style>", start) + len("  </style>")
-simple_css = """  <style>
-    body {
-      background-color: #80eeee;
-      font-family: "Times New Roman", serif;
-      color: black;
-    }
-
-    #myOutput {
-      width: 520px;
-      height: 300px;
-    }
-
-    #myImage {
-      width: 400px;
-      height: 200px;
-      object-fit: contain;
-      vertical-align: top;
-      margin-left: 50px;
-    }
-
-    .button-row {
-      margin: 3px 0;
-    }
-  </style>"""
-html = html[:start] + simple_css + html[end:]
-
-# Make the layout resemble the simple original screenshot rather than a modern card layout.
-html = html.replace(
-'''  <header>
-    <div class="eyebrow">JAVASCRIPT • DOM EXPLORER</div>
-    <h1>Browser Hack</h1>
-    <p>Object Sort Base — explore the hidden structure of a webpage. Select an inspector button to see the properties, attributes, and HTML of an object.</p>
-  </header>
-
-  <main>
-    <section class="panel">''',
-'''  <h1>Browser Hack by ______________</h1>
-  Object Sort base
-
-  <main>
-    <section>'''
-)
-html = html.replace('''    </section>
-
-    <section class="panel">
-      <h2>Inspector output</h2>
-      <p class="small">The output shows useful information about the selected object. Some browser objects contain many properties, so this page displays a short selection rather than thousands of entries.</p>''',
-'''    </section>
-
-    <section>
-      <h2>Inspector output</h2>
-      <p>The output shows useful information about the selected object.</p>''')
-html = html.replace('''    <section class="panel">
-      <h2>Extra HTML elements to inspect</h2>
-      <p>These five elements each have both an <code>id</code> and a <code>name</code> attribute. Button 20 checks the working image too.</p>
-      <div class="demo-layout">
-        <div class="demo-card" id="myDemoArea">''',
-'''    <section>
-      <h2>Extra HTML elements to inspect</h2>
-      <p>These elements each have an id and a name. Use buttons 15–20 above to inspect them.</p>
-      <div>
-        <div id="myDemoArea">''')
-html = html.replace('''        </div>
-        <div class="demo-card">
-          <p>20. Working image:</p>''',
-'''        </div>
-        <div>
-          <p>20. Working image:</p>''')
-html = html.replace('''          <p class="small">This illustration is embedded in the HTML file, so it does not depend on an external image website or internet connection.</p>''',
-'''          <p>This illustration is embedded in the HTML file, so it works offline.</p>''')
-html = html.replace('''    <section class="panel">
-      <h2>Back</h2>
-      <p class="small">Use this button to return to the previous page in your browser history.</p>''',
-'''    <section>
-      <h2>Back</h2>
-      <p>Use this button to return to the previous page.</p>''')
-# Ensure default-sized output like screenshot and simple headings.
-html = html.replace('<h2>Instructions: t2a17-Hackbrowser</h2>', '<h3>Instructions t2a17-Hackbrowser</h3>')
-html = html.replace('<h2>Inspector output</h2>', '<h3>Click the buttons to see all useable properties and methods of the object. Click refresh to reset Browser</h3>')
-html = html.replace('<h2>Extra HTML elements to inspect</h2>', '<h3>Extra HTML elements to inspect</h3>')
-html = html.replace('<h2>Back</h2>', '<h3>Back</h3>')
-html = html.replace('<p class="small">The output shows useful information about the selected object.</p>', '')
-html = html.replace('<p class="small">Use this button to return to the previous page.</p>', '')
-html = html.replace('class="button-grid"', 'class="button-row"')
-html = html.replace('class="controls"', 'class="controls"')
-# Keep the original-style large textarea and output area; use normal native controls.
-html = html.replace('class="output" aria-live="polite"', 'aria-live="polite"')
-html = html.replace('class="small"', '')
-html = html.replace('<button type="button" onclick="history.back()">← Back</button>', '<button type="button" onclick="history.back()">Back</button>')
-# Add a refresh button alongside inspector buttons.
-needle = '<div class="button-row" id="myInspectorButtons">'
-html = html.replace(needle, '<button type="button" onclick="location.reload()">Refresh Browser</button>\\n      ' + needle)
-
 path.write_text(html, encoding="utf-8")
-print(f"Updated simple version: {path} ({path.stat().st_size:,} bytes)")
+print(f"Fixed and saved {path} ({path.stat().st_size:,} bytes)")
 
+ 
