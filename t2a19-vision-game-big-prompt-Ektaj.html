@@ -7,13 +7,39 @@ html = r'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>t2a19-json-fred.html</title>
 <style>
-body { background-color: white; color: black; font-family: "Times New Roman", Times, serif; margin: 8px; }
-h1 { text-align: center; }
-#myJsonOutput { width: 550px; height: 65px; max-width: 95%; border: 0; background: white; font-family: monospace; }
-#myImage { display: block; width: 555px; max-width: 95%; max-height: 700px; object-fit: contain; object-position: left top; }
-#myResearch { width: 550px; max-width: 95%; height: 140px; }
+body {
+  background-color: white;
+  color: black;
+  font-family: "Times New Roman", Times, serif;
+}
+h1 {
+  text-align: center;
+}
+#myJsonOutput {
+  width: 550px;
+  height: 65px;
+  max-width: 95%;
+  border: 0;
+  background-color: white;
+  font-family: monospace;
+}
+#myImage {
+  width: 555px;
+  max-width: 95%;
+  max-height: 700px;
+  object-fit: contain;
+}
+#myImage[hidden] {
+  display: none;
+}
+#myResearch {
+  width: 550px;
+  max-width: 95%;
+  height: 140px;
+}
 </style>
 </head>
+
 <body>
 <h1>t2a19-json-fred.html</h1>
 
@@ -31,6 +57,7 @@ h1 { text-align: center; }
 
 <p id="myStatus">Choose an option above to load JSON data.</p>
 <pre id="myJsonOutput">Select a JSON connection to see its data here.</pre>
+
 <img id="myImage" alt="Image returned by the selected JSON connection" hidden>
 <p id="myImageLink"></p>
 
@@ -39,14 +66,38 @@ h1 { text-align: center; }
 
 <script>
 const myConnections = {
-  fox: { name: "Random Fox", url: "https://randomfox.ca/floof/" },
-  dog: { name: "Random Dog", url: "https://dog.ceo/api/breeds/image/random" },
-  user: { name: "Random User", url: "https://randomuser.me/api/" },
-  photo: { name: "Random Photo", url: "https://picsum.photos/v2/list?limit=1" },
-  pokemon: { name: "Pokemon - Pikachu", url: "https://pokeapi.co/api/v2/pokemon/pikachu" },
-  product: { name: "Product Information", url: "https://dummyjson.com/products/1" },
-  post: { name: "Sample Blog Post", url: "https://jsonplaceholder.typicode.com/posts/1" },
-  catfact: { name: "Random Cat Fact", url: "https://catfact.ninja/fact" }
+  fox: {
+    name: "Random Fox",
+    url: "https://randomfox.ca/floof/"
+  },
+  dog: {
+    name: "Random Dog",
+    url: "https://dog.ceo/api/breeds/image/random"
+  },
+  user: {
+    name: "Random User",
+    url: "https://randomuser.me/api/"
+  },
+  photo: {
+    name: "Random Photo",
+    url: "https://picsum.photos/v2/list?limit=1"
+  },
+  pokemon: {
+    name: "Pokemon - Pikachu",
+    url: "https://pokeapi.co/api/v2/pokemon/pikachu"
+  },
+  product: {
+    name: "Product Information",
+    url: "https://dummyjson.com/products/1"
+  },
+  post: {
+    name: "Sample Blog Post",
+    url: "https://jsonplaceholder.typicode.com/posts/1"
+  },
+  catfact: {
+    name: "Random Cat Fact",
+    url: "https://catfact.ninja/fact"
+  }
 };
 
 async function myLoadJson() {
@@ -72,17 +123,31 @@ async function myLoadJson() {
 
   try {
     const myResponse = await fetch(myConnection.url);
-    if (!myResponse.ok) throw new Error("HTTP error: " + myResponse.status);
+
+    if (!myResponse.ok) {
+      throw new Error("HTTP status " + myResponse.status);
+    }
 
     const myData = await myResponse.json();
+
     myOutput.textContent = JSON.stringify(myData, null, 2);
     myStatus.textContent = "Loaded: " + myConnection.name;
 
     const myFoundImage = myFindImage(myData);
-    if (myFoundImage) {
+
+    if (myFoundImage !== "") {
+      myImage.onload = function() {
+        myStatus.textContent = "Loaded: " + myConnection.name + " (image displayed)";
+      };
+
+      myImage.onerror = function() {
+        myImage.hidden = true;
+        myImageLink.textContent = "The JSON loaded, but its image could not be displayed.";
+      };
+
       myImage.src = myFoundImage;
-      myImage.hidden = false;
       myImage.alt = "Image from " + myConnection.name;
+      myImage.hidden = false;
 
       const myLink = document.createElement("a");
       myLink.href = myFoundImage;
@@ -91,42 +156,73 @@ async function myLoadJson() {
       myLink.textContent = "Open image in a new tab";
       myImageLink.appendChild(myLink);
     } else {
-      myImageLink.textContent = "This JSON connection does not provide an image.";
+      myImageLink.textContent =
+        "This connection returned JSON information but did not include an image.";
     }
+
   } catch (myError) {
     myStatus.textContent = "Could not load " + myConnection.name + ".";
-    myOutput.textContent = "Error: " + myError.message +
-      "\n\nCheck your internet connection and try another option. " +
-      "Some public APIs may temporarily be unavailable or block browser requests.";
+    myOutput.textContent =
+      "Error: " + myError.message +
+      "\n\nTry another connection and check your internet connection. " +
+      "Some websites may temporarily block requests from local HTML files.";
   }
 }
 
 function myFindImage(myData) {
-  if (!myData) return "";
+  if (myData === null || myData === undefined) {
+    return "";
+  }
+
+  if (typeof myData === "string") {
+    if (myData.startsWith("https://") || myData.startsWith("http://")) {
+      return myData;
+    }
+    return "";
+  }
 
   if (Array.isArray(myData)) {
     for (const myItem of myData) {
       const myResult = myFindImage(myItem);
-      if (myResult) return myResult;
+      if (myResult !== "") {
+        return myResult;
+      }
     }
+    return "";
   }
 
   if (typeof myData === "object") {
-    const myImageKeys = ["image", "url", "download_url", "thumbnail", "large", "front_default"];
+    // Common image fields returned by the eight JSON services.
+    const myImageKeys = [
+      "image",
+      "message",
+      "download_url",
+      "large",
+      "medium",
+      "thumbnail",
+      "front_default"
+    ];
+
     for (const myKey of myImageKeys) {
-      if (typeof myData[myKey] === "string" &&
-          /^https?:\\/\\//i.test(myData[myKey])) {
-        return myData[myKey];
+      if (typeof myData[myKey] === "string") {
+        const myValue = myData[myKey];
+
+        if (myValue.startsWith("https://") || myValue.startsWith("http://")) {
+          return myValue;
+        }
       }
     }
 
+    // Check nested data such as Random User results, Pokemon sprites,
+    // and product images.
     for (const myKey in myData) {
-      if (typeof myData[myKey] === "object" && myData[myKey] !== null) {
-        const myResult = myFindImage(myData[myKey]);
-        if (myResult) return myResult;
+      const myResult = myFindImage(myData[myKey]);
+      if (myResult !== "") {
+        return myResult;
       }
     }
   }
+
   return "";
 }
 </script>
@@ -136,6 +232,4 @@ function myFindImage(myData) {
 
 path = Path("/mnt/data/t2a19-json-fred.html")
 path.write_text(html, encoding="utf-8")
-print(f"Created {path} ({path.stat().st_size:,} bytes)")
-
-
+print(f"Fixed file created: {path} ({path.stat().st_size:,} bytes)")
